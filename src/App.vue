@@ -2,6 +2,7 @@
 import { RouterLink, RouterView, useRouter } from 'vue-router';
 import { ref } from 'vue';
 import Button from 'primevue/button';
+import Avatar from 'primevue/avatar';
 
 const router = useRouter();
 const activeButton = ref(null);
@@ -18,11 +19,9 @@ let loggedIn = ref(true);
 <template>
   <nav>
     <div class="nav-left">
-      <router-link to="/">
-        <svg width="125" height="50" xmlns="http://www.w3.org/2000/svg">
+        <svg @click="navigate('/')" width="125" height="50" xmlns="http://www.w3.org/2000/svg">
           <text x="10" y="40" font-family="Arial" font-size="40" fill="white">K-GO</text>
         </svg>
-      </router-link>
       <Button @click="navigate('/places', 'places')" :class="['left-button', { pressed: activeButton === 'places' }]"  text>Places</Button>
       <Button @click="navigate('/events', 'events')" :class="['right-button', { pressed: activeButton === 'events' }]" text>Events</Button>
     </div>
@@ -32,12 +31,11 @@ let loggedIn = ref(true);
         |
         <router-link to="/edit-profile">create account</router-link>
       </div>
-      <div v-else>
-        <!-- <router-link to="/favorite-places">My Places</router-link>
-        <router-link to="/my-events">My Events</router-link> -->
+      <div v-else style="display: flex; align-items: center;" >
         <Button @click="navigate('/favorite-places', 'favorite-places')" :class="['left-button', { pressed: activeButton === 'favorite-places' }]" text>My Places</Button>
         <Button @click="navigate('/my-events', 'my-events')" :class="['right-button', { pressed: activeButton === 'my-events' }]" text>My Events</Button>
-        <router-link to="/profile">My Profile</router-link>
+        <!-- <router-link to="/profile">My Profile</router-link> -->
+        <Avatar image="../public/favicon.ico" class="mr-2" size="large" shape="circle" @click="navigate('/profile')" style="background-color: white; margin: 10px; size: 40px;"/>
       </div>
     </div>
   </nav>
