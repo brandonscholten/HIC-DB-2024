@@ -12,6 +12,10 @@ const navigate = (route, name) => {
   router.push(route);
 };
 
+const login = (username, passowrd) => {
+  //send username and hashed password to the express.js backend
+}
+
 let loggedIn = ref(true);
 
 </script>
@@ -27,7 +31,7 @@ let loggedIn = ref(true);
     </div>
     <div class="nav-right">
       <div class="login-links" v-if="!loggedIn">
-        <router-link>login</router-link>
+        <router-link @click="login()">login</router-link>
         |
         <router-link to="/edit-profile">create account</router-link>
       </div>
