@@ -1,19 +1,31 @@
 <script setup>
 import { RouterLink, RouterView, useRouter } from 'vue-router';
 import { ref } from 'vue';
+import { Argon2id } from 'oslo/password';
 import Button from 'primevue/button';
 import Avatar from 'primevue/avatar';
+import axios from 'axios';
 
 const router = useRouter();
 const activeButton = ref(null);
+
+const argon2id = new Argon2id();
 
 const navigate = (route, name) => {
   activeButton.value = name;
   router.push(route);
 };
 
-const login = (username, passowrd) => {
+const login = (email, passowrd) => {
   //send username and hashed password to the express.js backend
+  axios({
+    method: 'post',
+    url: '/login',
+    data: {
+      email: email,
+      password: await argon2id.hash(password), //TODO: await can't be used here
+    }
+  });
 }
 
 let loggedIn = ref(true);
