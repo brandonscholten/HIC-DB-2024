@@ -1,85 +1,85 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+import { RouterLink, RouterView, useRouter } from 'vue-router';
+import { ref } from 'vue';
+import Button from 'primevue/button';
+import Avatar from 'primevue/avatar';
+
+const router = useRouter();
+const activeButton = ref(null);
+
+const navigate = (route, name) => {
+  activeButton.value = name;
+  router.push(route);
+};
+
+let loggedIn = ref(true);
+
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
+  <nav>
+    <div class="nav-left">
+        <svg @click="navigate('/')" width="125" height="50" xmlns="http://www.w3.org/2000/svg">
+          <text x="10" y="40" font-family="Arial" font-size="40" fill="white">K-GO</text>
+        </svg>
+      <Button @click="navigate('/places', 'places')" :class="['left-button', { pressed: activeButton === 'places' }]"  text>Places</Button>
+      <Button @click="navigate('/events', 'events')" :class="['right-button', { pressed: activeButton === 'events' }]" text>Events</Button>
     </div>
-  </header>
-
+    <div class="nav-right">
+      <div class="login-links" v-if="!loggedIn">
+        <router-link>login</router-link>
+        |
+        <router-link to="/edit-profile">create account</router-link>
+      </div>
+      <div v-else style="display: flex; align-items: center;" >
+        <Button @click="navigate('/favorite-places', 'favorite-places')" :class="['left-button', { pressed: activeButton === 'favorite-places' }]" text>My Places</Button>
+        <Button @click="navigate('/my-events', 'my-events')" :class="['right-button', { pressed: activeButton === 'my-events' }]" text>My Events</Button>
+        <!-- <router-link to="/profile">My Profile</router-link> -->
+        <Avatar image="../public/favicon.ico" class="mr-2" size="large" shape="circle" @click="navigate('/profile')" style="background-color: white; margin: 10px; size: 40px;"/>
+      </div>
+    </div>
+  </nav>
   <RouterView />
 </template>
 
 <style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
+
+nav{
+  display: flex;
+  flex-direction: row;
+  background-image: linear-gradient(#008D9D, #00000000);
 }
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
+.nav-left{
+  display: flex;
+  width: 50%;
+  align-items: center;
+  flex-direction: row;
 }
-
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
+.nav-right{
+  width: 50%;
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
 }
-
-nav a.router-link-exact-active {
-  color: var(--color-text);
+a{
+  color: white;
+  margin: 10px;
+} 
+Button{
+  color: black;
+  background-color: white;
+  border-radius: 0;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
 }
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
+.pressed{
+  box-shadow: none !important;
 }
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
+.left-button{
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
 }
-
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
+.right-button{
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
 }
 </style>
