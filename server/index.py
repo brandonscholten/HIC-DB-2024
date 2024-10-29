@@ -5,7 +5,12 @@ from flask import Flask, session
 import subprocess as sp
 import session_utils
 
+from flask_cors import CORS
+
 app = Flask(__name__)
+
+# COMMENT THIS OUT IN PRODUCTION
+CORS(app)
 
 #routes 
 @app.route("/login/<email>/<password>")
