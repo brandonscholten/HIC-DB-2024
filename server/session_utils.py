@@ -10,7 +10,7 @@ from datetime import datetime, timedelta
 def create_session(user_email, user_pass):
     session_id = secrets.token_hex(16)
     expiration = datetime.now() + timedelta(hours=1)
-    sp.Popen(['./php/','create_session.php',session_id, user_email, user_pass, expiration]).communicate()
+    sp.Popen(['php','./php/create_session.php',session_id, user_email, user_pass, str(expiration)]).communicate()
 
 def validate_session(session_id):
-    sp.Popen(['./php/','validate_session.php',session_id, datetime.now(), datetime.now()+timedelta(hours=1)]).communicate()
+    sp.Popen(['php','./php/validate_session.php',session_id, datetime.now(), datetime.now()+timedelta(hours=1)]).communicate()

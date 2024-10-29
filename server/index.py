@@ -5,7 +5,7 @@ from flask import Flask, session
 import subprocess as sp
 import session_utils
 
-app = Flask(__k_go__)
+app = Flask(__name__)
 
 #routes 
 @app.route("/login/<email>/<password>")
