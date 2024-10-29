@@ -12,4 +12,4 @@ app = Flask(__name__)
 def login(email, password):
     #TODO: hash password to match whatever is in the database
     #validate credentials, create a session if credentials are valid
-    session_utils.create_session(email, password)
+    return session_utils.create_session(email, password)
