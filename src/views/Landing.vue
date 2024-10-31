@@ -19,7 +19,7 @@ import Button from 'primevue/button';
           Welcome to K-Go! The wonderful city of Kent, Ohio has a lot to offer. From restaurants and bars, to cafes, and parks there is something for everyone.
           Explore places, events, and meet new people.
         </p>
-        <RouterLink to="/editProfile">
+        <RouterLink to="/edit-profile">
           <Button label="Get Started" severity="success" size="large" rounded />
         </RouterLink>
       </div>
