@@ -6,13 +6,31 @@ import Avatar from 'primevue/avatar';
 
 const router = useRouter();
 const activeButton = ref(null);
+let loggedIn = ref(false);
 
 const navigate = (route, name) => {
   activeButton.value = name;
   router.push(route);
 };
 
-let loggedIn = ref(true);
+const login = async () => {
+  //get email and password from user TODO: create a real login modal
+  let email = prompt("email:");
+  let password = prompt("password:");
+  //send email and password to the flask server TODO: change url to a publicly available address
+  const url = 'http://localhost:5000/login/'+email+'/'+password //TODO: password should not be plaintext lol
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`Response status: ${response.status}`);
+    }
+    const json = await response.json();
+    console.log(json);
+    loggedIn.value = true;
+  } catch (error) {
+    console.error(error.message);
+  }
+} 
 
 </script>
 
@@ -27,7 +45,7 @@ let loggedIn = ref(true);
     </div>
     <div class="nav-right">
       <div class="login-links" v-if="!loggedIn">
-        <router-link>login</router-link>
+        <a @click="login()">login</a>
         |
         <router-link to="/edit-profile">create account</router-link>
       </div>
@@ -64,6 +82,8 @@ nav{
 a{
   color: white;
   margin: 10px;
+  text-decoration: underline; 
+  cursor: pointer; 
 } 
 Button{
   color: black;
