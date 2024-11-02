@@ -5,15 +5,15 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 
 // Mock profile data (replace with API call in a real application)
-const profileData = ref({
-  name: 'James Smith',
-  pronouns: 'He/him',
-  age: 33,
-  hobbies: ['hobby1', 'hobby2', 'hobby3'],
-  interests: ['interest1', 'interest2', 'interest3'],
-  allergies: ['peanut-allergy'],
-  profilePictureUrl: 'https://via.placeholder.com/150' // Placeholder image URL
-});
+// const profileData = ref({
+//   name: 'James Smith',
+//   pronouns: 'He/him',
+//   age: 33,
+//   hobbies: ['hobby1', 'hobby2', 'hobby3'],
+//   interests: ['interest1', 'interest2', 'interest3'],
+//   allergies: ['peanut-allergy'],
+//   profilePictureUrl: 'https://via.placeholder.com/150' // Placeholder image URL
+// });
 
 // Fetch profile data on component mount (optional)
 onMounted(() => {
@@ -70,7 +70,6 @@ function goToEditProfile() {
   max-width: 600px;
   margin: auto;
   padding: 2rem;
-  background-color: #a0dbe6;
   font-family: Arial, sans-serif;
 }
 

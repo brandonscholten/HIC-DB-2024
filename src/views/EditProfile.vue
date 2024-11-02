@@ -96,7 +96,7 @@ function onFileChange(event) {
 <style scoped>
 .edit-profile {
   max-width: 600px;
-  margin: auto;
+  margin: 100px auto;
   padding: 1rem;
   background-color: #e0f2f1;
   color: #004d40;
