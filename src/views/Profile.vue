@@ -1,5 +1,8 @@
 <script setup>
 import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 // Mock profile data (replace with API call in a real application)
 const profileData = ref({
@@ -18,8 +21,7 @@ onMounted(() => {
   console.log("Profile data loaded:", profileData.value);
 });
 
-function editProfile() {
-  console.log("Profile edit data submitted:", profileData.value);
+function goToEditProfile() {
   router.push('/edit-profile');
 }
 </script>
@@ -57,7 +59,7 @@ function editProfile() {
       </div>
 
       <!-- Edit Button -->
-      <button class="edit-button">Edit</button>
+      <button class="edit-button" @click="goToEditProfile">Edit</button>
     </div>
   </div>
 </template>
