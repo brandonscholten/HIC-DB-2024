@@ -19,7 +19,7 @@ const profilePictureUrl = ref(null);
 
 function submitProfile() {
   console.log("Profile data submitted:", profileData.value);
-  router.push('/edit-profile');
+  router.push('/profile');
 }
 
 function onFileChange(event) {
