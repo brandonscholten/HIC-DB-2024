@@ -26,7 +26,10 @@ const login = async () => {
     }
     const json = await response.json();
     console.log(json);
+    //save the session ID as a cookie
+    document.cookie = "session_id="+json.session_id+";"
     loggedIn.value = true;
+    navigate('/places');
   } catch (error) {
     console.error(error.message);
   }

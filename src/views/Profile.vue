@@ -5,20 +5,33 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 
 // Mock profile data (replace with API call in a real application)
-// const profileData = ref({
-//   name: 'James Smith',
-//   pronouns: 'He/him',
-//   age: 33,
-//   hobbies: ['hobby1', 'hobby2', 'hobby3'],
-//   interests: ['interest1', 'interest2', 'interest3'],
-//   allergies: ['peanut-allergy'],
-//   profilePictureUrl: 'https://via.placeholder.com/150' // Placeholder image URL
-// });
+const profileData = ref({
+  name: 'James Smith',
+  pronouns: 'He/him',
+  age: 33,
+  hobbies: ['hobby1', 'hobby2', 'hobby3'],
+  interests: ['interest1', 'interest2', 'interest3'],
+  allergies: ['peanut-allergy'],
+  profilePictureUrl: 'https://via.placeholder.com/150' // Placeholder image URL
+});
+
+// the following function is from https://javascript.info/cookie
+// returns the cookie with the given name,
+// or undefined if not found
+function getCookie(name) {
+  let matches = document.cookie.match(new RegExp(
+    "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+  ));
+  return matches ? decodeURIComponent(matches[1]) : undefined;
+}
 
 // Fetch profile data on component mount (optional)
 onMounted(() => {
-  // Fetch data from API if necessary
-  console.log("Profile data loaded:", profileData.value);
+  //check for session token
+  if (getCookie("session_id")) {
+    // TODO: actually fetch profile data
+    console.log("Profile data loaded:", profileData.value);
+  }
 });
 
 function goToEditProfile() {
