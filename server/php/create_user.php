@@ -53,7 +53,7 @@ if ($fetched_user_id == '') {
     $jsonAnswer = array('id' => $fetched_user_id, "error" => '');
     echo json_encode($jsonAnswer);
 } else {
-    $jsonAnswer = array('error' => 'user with this email already exists');
+    $jsonAnswer = array('error' => 'user with this email does not exist');
     echo json_encode($jsonAnswer);
 }
 

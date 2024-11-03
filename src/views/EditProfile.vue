@@ -4,8 +4,6 @@ import { useRouter } from 'vue-router';
 
 const router = useRouter();
 
-const activeSession = ref(false);
-
 const profileData = ref({
   name: '',
   pronouns: '',
@@ -98,10 +96,39 @@ function onFileChange(event) {
   }
 }
 
-onMounted(() => {
+onMounted(async () => {
   if (getCookie("session_id")) {
     //TODO: if a session token is stored, attempt to define profileData.value
-    console.log('there is a session token');
+    //send request to get logged in user's information
+    const url = "http://localhost:5000/get_user/?session_id="+getCookie('session_id')
+    try { 
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+      const json = await response.json();
+      //set user profile data
+      let user_info = JSON.parse(json.user_info);
+      profileData.value.name = user_info.name;
+      profileData.value.email = user_info.email;
+      profileData.value.password = user_info.password;
+      profileData.value.pronouns = user_info.pronouns;
+      profileData.value.age = user_info.age;
+      //parse and set interests
+      interestString = '';
+      for (let interest in user_info.interests) {
+        interestString += "#"+user_info.interests[interest]+" ";
+      }
+      profileData.value.interests = interestString;
+      //parse and set restrictions
+      restrictionString = '';
+      for (let restriction in user_info.restrictions) {
+        restrictionString += "#"+user_info.interests[restriction]+" ";
+      }
+      profileData.value.allergies = restrictionString;
+    } catch (error) {
+      console.error(error.message);
+    }
   }
 });
 

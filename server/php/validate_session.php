@@ -4,8 +4,8 @@ header( "content-type: application/json" );
 
 //get data from args passed with Python
 $session_id = $argv[1];
-$current_time = $args[2];
-$updated_time = $args[3];
+$current_time = $argv[2];
+$updated_time = $argv[3];
 
 //get SQL connection information from environment variables
 $sql_host = getenv('K_GO_HOST');
@@ -17,16 +17,21 @@ $database = getenv("K_GO_DATA");
 $mysqli = new mysqli($sql_host, $sql_user, $sql_pass, $database);
 
 //get information about the session
-$session = $mysqli->prepare("SELECT * FROM user_session WHERE session_id = '?'");
+$session = $mysqli->prepare("SELECT user_id, expires_at FROM user_session WHERE id = '?'");
+if (!$session) {
+    echo "error: " . $mysqli->error;
+}
 $session->bind_param("s", $session_id);
 $session->execute();
-$session->store_result();
-$session->fetch_assoc();
+$session_result = '';
+$session->bind_result($user_id, $expires_at);
+$session->fetch();
+$session->close();
 
-if ($session->num_rows > 0) {
+if ($user_id) { //TODO: this is not running when a session exists but is invalid
     if ($current_time < $session['expires_at']) {
         //update the session
-        $update_stmt = $mysqli->prepare("UPDATE user_session SET expires_at = '?' WHERE session_id = '?'");
+        $update_stmt = $mysqli->prepare("UPDATE user_session SET expires_at = ? WHERE id = '?'");
         $update_stmt->bind_param("ss", $updated_time, $session_id);
         $update_stmt->execute();
         //send a response
