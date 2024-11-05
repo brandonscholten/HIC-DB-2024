@@ -17,21 +17,21 @@ $database = getenv("K_GO_DATA");
 $mysqli = new mysqli($sql_host, $sql_user, $sql_pass, $database);
 
 //get information about the session
-$session = $mysqli->prepare("SELECT user_id, expires_at FROM user_session WHERE id = '?'");
+$session = $mysqli->prepare("SELECT user_id, expires_at FROM user_session WHERE id = ?");
 if (!$session) {
     echo "error: " . $mysqli->error;
 }
 $session->bind_param("s", $session_id);
 $session->execute();
-$session_result = '';
 $session->bind_result($user_id, $expires_at);
-$session->fetch();
+$session_exists = $session->fetch();
 $session->close();
 
-if ($user_id) { //TODO: this is not running when a session exists but is invalid
-    if ($current_time < $session['expires_at']) {
+if ($session_exists) { //TODO: this is not running when a session exists but is invalid
+
+    if ($current_time < $expires_at) {
         //update the session
-        $update_stmt = $mysqli->prepare("UPDATE user_session SET expires_at = ? WHERE id = '?'");
+        $update_stmt = $mysqli->prepare("UPDATE user_session SET expires_at = ? WHERE id = ?");
         $update_stmt->bind_param("ss", $updated_time, $session_id);
         $update_stmt->execute();
         //send a response
@@ -39,7 +39,7 @@ if ($user_id) { //TODO: this is not running when a session exists but is invalid
         echo json_encode($jsonAnswer);
     } else {
         //delete the session
-        $delete_stmt = $mysqli->prepare("DELETE FROM user_session WHERE session_id = '?'");
+        $delete_stmt = $mysqli->prepare("DELETE FROM user_session WHERE session_id = ?");
         $delete_stmt->bind_param("s", $session_id);
         $delete_stmt->execute();
         //send a response
@@ -47,7 +47,7 @@ if ($user_id) { //TODO: this is not running when a session exists but is invalid
         echo json_encode($jsonAnswer);
     }
 } else {
-    $jsonAnswer = array('error' => 'invalid session token');
+    $jsonAnswer = array('error' => 'invalid session token ' . $expires_at . '.');
     echo json_encode($jsonAnswer);
 }
 

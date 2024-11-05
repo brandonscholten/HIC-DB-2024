@@ -59,7 +59,7 @@ def add_interests_restrictions(user_id, interests, restrictions):
     if restrictions_process.returncode != 0:
         print(f"Error adding user restrictions: {stderr_restrictions.decode()}")
 
-    return jsonify({
+    return {
         "user_interests" : stdout_interests.decode(),
         "user_restrictions" : stdout_restrictions.decode()
-    })
+    }

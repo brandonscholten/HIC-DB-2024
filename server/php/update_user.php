@@ -3,12 +3,12 @@
 header( 'content-type: application/json' );
 
 //get data from args passed with python
-$user_name = $argv[2];
-$user_email = $argv[3];
-$user_pass = $argv[4];
-$user_pronouns = $argv[5];
-$user_age = $argv[6];
-$user_photo = $argv[7];
+$user_name = $argv[1];
+$user_email = $argv[2];
+$user_pass = $argv[3];
+$user_pronouns = $argv[4];
+$user_age = $argv[5];
+$user_photo = $argv[6];
 
 //get SQL connection information from envrionment variables
 $sql_host = getenv("K_GO_HOST");
@@ -27,8 +27,8 @@ if (!$user->execute()) {
 }
 $fetched_user_id = '';
 $user->bind_result($fetched_user_id);
-$existing_user->fetch();
-$existing_user->close();
+$user->fetch();
+$user->close();
 
 if ($fetched_user_id != '') {
     //update the user
@@ -41,11 +41,11 @@ if ($fetched_user_id != '') {
     $update_stmt->close();
 
     //clear the interests and restrictions entries for this user
-    $delete_stmt = $mysqli->prepare("DELETE interests, restrictions FROM intterests INNER JOIN restrictions WHERE interests.user_id = restrictions.user_id and interests.user_id = ?");
+    $delete_stmt = $mysqli->prepare("DELETE interests, restrictions FROM interests INNER JOIN restrictions WHERE interests.user_id = restrictions.user_id and interests.user_id = ?");
     if (!$delete_stmt) {
         echo "error: " . $mysqli->error;
     }
-    $update_stmt->bind_param("s",$fetched_user_id);
+    $delete_stmt->bind_param("s", $fetched_user_id);
     $delete_stmt->execute();
     $delete_stmt->close();
 

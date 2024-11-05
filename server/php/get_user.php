@@ -46,8 +46,11 @@ if ($fetched_user_id != 0) {
     }
     $interest_query->bind_param("s", $fetched_user_id);
     $interest_query->execute();
-    $interest_query->bind_result($interests);
-    $interest_query->fetch_all();
+    $interest_query->bind_result($interest);
+    $interests = [];
+    while($interest_query->fetch()) {
+        $interests[] = $interest;
+    }
     $interest_query->close();
 
     //get restrictions
@@ -57,8 +60,10 @@ if ($fetched_user_id != 0) {
     }
     $restriction_query->bind_param("s", $fetched_user_id);
     $restriction_query->execute();
-    $restriction_query->bind_result($restrictions);
-    $restriction_query->fetch_all();
+    $restriction_query->bind_result($restriction);
+    while($restriction_query->fetch()) {
+        $restrictions[] = $restriction;
+    }
     $restriction_query->close();
 
     //send the inforatmion back to the client

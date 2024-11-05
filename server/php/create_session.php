@@ -18,7 +18,7 @@ $database = getenv("K_GO_DATA");
 $mysqli = new mysqli($sql_host, $sql_user, $sql_pass, $database);
 
 //check for existence of user
-$user = $mysqli->prepare("SELECT password FROM user WHERE email = ?");
+$user = $mysqli->prepare("SELECT id, password FROM user WHERE email = ?");
 $user->bind_param("s", $user_email);
 if (!$user->execute()) {
     echo "Execute failed: " . htmlspecialchars($user->error);
@@ -26,7 +26,7 @@ if (!$user->execute()) {
 
 $fetched_user_pass = '';
 
-$user->bind_result($fetched_user_pass);
+$user->bind_result($fetched_user_id, $fetched_user_pass);
 $user->fetch();
 $user->close();
 
@@ -44,7 +44,7 @@ if ($fetched_user_pass != '') {
         if (!$insert_stmt) {
             echo "error: " . $mysqli->error;
         }
-        $insert_stmt->bind_param("sss", $session_id, $user_email, $expiration);
+        $insert_stmt->bind_param("sss", $session_id, $fetched_user_id, $expiration);
         $insert_stmt->execute();
 
         $jsonAnswer = array(

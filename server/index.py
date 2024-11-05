@@ -62,13 +62,13 @@ def create_user():
 
 @app.route('/update_user/')
 def update_user():
+    user_info = request.args.to_dict(flat=False)
 
     #check that the user has a valid session
     if not session_utils.validate_session(user_info['session_id'][0]):
         return jsonify({"error" : "failed to validate session"})
 
     #if the user has a valid session, update their profile
-    user_info = request.args.to_dict(flat=False)
     update_process = sp.Popen(
         [
             'php','./php/update_user.php', 
