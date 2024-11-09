@@ -1,12 +1,13 @@
 <script setup>
 import { RouterLink, RouterView, useRouter } from 'vue-router';
-import { ref } from 'vue';
+import { provide, ref } from 'vue';
 import Button from 'primevue/button';
 import Avatar from 'primevue/avatar';
 
 const router = useRouter();
 const activeButton = ref(null);
 let loggedIn = ref(false);
+provide('loggedIn', loggedIn);
 
 const navigate = (route, name) => {
   activeButton.value = name;
@@ -26,7 +27,10 @@ const login = async () => {
     }
     const json = await response.json();
     console.log(json);
+    //save the session ID as a cookie
+    document.cookie = "session_id="+json.session_id+";"
     loggedIn.value = true;
+    navigate('/places');
   } catch (error) {
     console.error(error.message);
   }

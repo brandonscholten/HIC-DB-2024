@@ -1,6 +1,9 @@
 <script setup>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { inject } from 'vue';
+
+const loggedIn = inject('loggedIn');
 
 const router = useRouter();
 
@@ -12,13 +15,103 @@ const profileData = ref({
   password: '',
   interests: '',
   allergies: '',
-  hobbies: ''
+  hobbies: '',
+  photo: '',
 });
 
 const profilePictureUrl = ref(null);
 
-function submitProfile() {
+// the following function is from https://javascript.info/cookie
+// returns the cookie with the given name,
+// or undefined if not found
+function getCookie(name) {
+  let matches = document.cookie.match(new RegExp(
+    "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+  ));
+  return matches ? decodeURIComponent(matches[1]) : undefined;
+}
+
+// construct url suffix for interests and restrictions
+function getUrlSuffix(profileData) {
+  let interestString = ""; 
+  let restrictionString = "";
+
+  let interests = profileData.interests.slice(1).split(" #");
+  let restrictions = profileData.allergies.slice(1).split(" #");
+
+  for (let interest in interests) {
+    interestString += "&interest="+interests[interest];
+  }
+
+  for (let restriction in restrictions) {
+    restrictionString += "&restriction="+restrictions[restriction];
+  }
+  return interestString + restrictionString;
+}
+
+const createProfile = async(profileData) => {
+  //send request to create profile
+  //then update session cookie 
+
+  //construct url
+
+  const url = (
+    'http://localhost:5000/create_user/?name='
+    + profileData.name + '&email=' + profileData.email
+    + '&password=' + profileData.password
+    + '&pronouns=' + profileData.pronouns
+    + '&age=' + profileData.age + '&photo=' + profileData.photo
+    + getUrlSuffix(profileData)
+  );
+
+  //send request
+  try { 
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`Response status: ${response.status}`);
+    }
+    const json = await response.json();
+    //set cookie
+    document.cookie = "session_id="+JSON.parse(json.session_message).session_id+";";
+  } catch (error) {
+    console.error(error.message);
+  }
+
+}
+
+const updateProfile = async (profileData) => {
+  //send request to update profile
+
+  const url = (
+    'http://localhost:5000/update_user/?session_id='
+    + getCookie('session_id') + '&name='
+    + profileData.name + '&email=' + profileData.email
+    + '&password=' + profileData.password + '&pronouns='
+    + profileData.pronouns + '&age=' + profileData.age
+    + '&photo=' + profileData.photo + getUrlSuffix(profileData)
+  );
+
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`Response status: ${response.status}`);
+    }
+    const json = await response.json();
+  } catch (error) {
+    console.error(error.message);
+  }
+  
+}
+
+async function submitProfile() {
   console.log("Profile data submitted:", profileData.value);
+  if (getCookie("session_id")) {
+    //TODO: if there is a session token stored, attempt to update the account
+    await updateProfile(profileData.value);
+  } else {
+    //if there is not a session token stored, create a new account
+    await createProfile(profileData.value);
+  }
   router.push('/profile');
 }
 
@@ -28,11 +121,51 @@ function onFileChange(event) {
     profilePictureUrl.value = URL.createObjectURL(file);
   }
 }
+
+onMounted(async () => {
+  if (getCookie("session_id")) {
+    //TODO: if a session token is stored, attempt to define profileData.value
+    //send request to get logged in user's information
+    const url = "http://localhost:5000/get_user/?session_id="+getCookie('session_id')
+    try { 
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+      const json = await response.json();
+      //change navbar to logged in
+      loggedIn.value = true;
+      //set user profile data
+      let user_info = JSON.parse(json.user_info);
+      profileData.value.name = user_info.name;
+      profileData.value.email = user_info.email;
+      profileData.value.password = user_info.password;
+      profileData.value.pronouns = user_info.pronouns;
+      profileData.value.age = user_info.age;
+      //parse and set interests
+      let interestString = '';
+      for (let interest in user_info.interests) {
+        interestString += "#"+user_info.interests[interest]+" ";
+      }
+      profileData.value.interests = interestString;
+      //parse and set restrictions
+      let restrictionString = '';
+      for (let restriction in user_info.restrictions) {
+        restrictionString += "#"+user_info.restrictions[restriction]+" ";
+      }
+      profileData.value.allergies = restrictionString;
+    } catch (error) {
+      console.error(error.message);
+    }
+  }
+});
+
+
 </script>
 
 <template>
   <div class="edit-profile">
-    <h2>Edit Profile</h2>
+    <h2>Profile Information</h2>
     <form @submit.prevent="submitProfile">
       <!-- Name, Pronouns, and Age Fields -->
       <div class="row">
@@ -81,10 +214,6 @@ function onFileChange(event) {
           <label for="allergies">Allergies/Food Restrictions</label>
           <textarea id="allergies" v-model="profileData.allergies"></textarea>
         </div>
-        <div class="form-group">
-          <label for="hobbies">Hobbies</label>
-          <textarea id="hobbies" v-model="profileData.hobbies"></textarea>
-        </div>
       </div>
 
       <!-- Submit Button -->
@@ -96,7 +225,7 @@ function onFileChange(event) {
 <style scoped>
 .edit-profile {
   max-width: 600px;
-  margin: auto;
+  margin: 100px auto;
   padding: 1rem;
   background-color: #e0f2f1;
   color: #004d40;

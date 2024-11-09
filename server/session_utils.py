@@ -6,6 +6,8 @@
 import subprocess as sp
 import secrets
 from datetime import datetime, timedelta
+from flask import jsonify
+import json
 
 def create_session(user_email, user_pass):
     session_id = secrets.token_hex(16)
@@ -21,4 +23,43 @@ def create_session(user_email, user_pass):
     return stdout.decode()
 
 def validate_session(session_id):
-    sp.Popen(['php','./php/validate_session.php',session_id, datetime.now(), datetime.now()+timedelta(hours=1)]).communicate()
+    process = sp.Popen(
+        ['php','./php/validate_session.php',session_id, str(datetime.now()), str(datetime.now()+timedelta(hours=1))],
+        stdout=sp.PIPE,
+        stderr=sp.PIPE
+    )
+    stdout, stderr = process.communicate()
+    if process.returncode != 0:
+        print(f"Error validating session: {stderr.decode()}")
+        return False
+    response = json.loads(stdout.decode())
+    if "error" in response: 
+        print("Error validating session: "+response['error'])
+        return False
+    return True
+
+def add_interests_restrictions(user_id, interests, restrictions):
+    #add entries to interests table
+    interests_process = sp.Popen(
+        ['php','./php/add_user_details.php', str(user_id), 'interests'] + interests,
+        stdout=sp.PIPE,
+        stderr=sp.PIPE
+    )
+    stdout_interests, stderr_interests = interests_process.communicate()
+    if interests_process != 0:
+        print(f"Error adding user interests: {stderr_interests.decode()}")
+
+    #add entries to food restrictions table
+    restrictions_process = sp.Popen(
+        ['php', './php/add_user_details.php', str(user_id), 'restrictions'] + restrictions,
+        stdout=sp.PIPE,
+        stderr=sp.PIPE
+    )
+    stdout_restrictions, stderr_restrictions = restrictions_process.communicate()
+    if restrictions_process.returncode != 0:
+        print(f"Error adding user restrictions: {stderr_restrictions.decode()}")
+
+    return {
+        "user_interests" : stdout_interests.decode(),
+        "user_restrictions" : stdout_restrictions.decode()
+    }

@@ -1,24 +1,58 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
+import { inject } from 'vue';
+
+const loggedIn = inject('loggedIn');
 
 const router = useRouter();
 
 // Mock profile data (replace with API call in a real application)
 const profileData = ref({
-  name: 'James Smith',
-  pronouns: 'He/him',
-  age: 33,
-  hobbies: ['hobby1', 'hobby2', 'hobby3'],
-  interests: ['interest1', 'interest2', 'interest3'],
-  allergies: ['peanut-allergy'],
-  profilePictureUrl: 'https://via.placeholder.com/150' // Placeholder image URL
+  name: '',
+  pronouns: '',
+  age: 0,
+  hobbies: [],
+  interests: [],
+  allergies: [],
+  profilePictureUrl: '',
 });
 
+// the following function is from https://javascript.info/cookie
+// returns the cookie with the given name,
+// or undefined if not found
+function getCookie(name) {
+  let matches = document.cookie.match(new RegExp(
+    "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+  ));
+  return matches ? decodeURIComponent(matches[1]) : undefined;
+}
+
 // Fetch profile data on component mount (optional)
-onMounted(() => {
-  // Fetch data from API if necessary
-  console.log("Profile data loaded:", profileData.value);
+onMounted(async () => {
+  if (getCookie("session_id")) {
+    //TODO: if a session token is stored, attempt to define profileData.value
+    //send request to get logged in user's information
+    const url = "http://localhost:5000/get_user/?session_id="+getCookie('session_id')
+    try { 
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+      const json = await response.json();
+      //change navbar to logged in
+      loggedIn.value = true;
+      //set user profile data
+      let user_info = JSON.parse(json.user_info);
+      profileData.value.name = user_info.name;
+      profileData.value.pronouns = user_info.pronouns;
+      profileData.value.age = user_info.age;
+      profileData.value.interests = user_info.interests;
+      profileData.value.allergies = user_info.restrictions;
+    } catch (error) {
+      console.error(error.message);
+    }
+  }
 });
 
 function goToEditProfile() {
@@ -44,10 +78,10 @@ function goToEditProfile() {
 
       <!-- Hobbies, Interests, and Allergies -->
       <div class="profile-details">
-        <div class="profile-section">
+        <!-- <div class="profile-section">
           <strong>Hobbies</strong>
           <p v-for="hobby in profileData.hobbies" :key="hobby" class="tag">#{{ hobby }}</p>
-        </div>
+        </div> -->
         <div class="profile-section">
           <strong>Interests</strong>
           <p v-for="interest in profileData.interests" :key="interest" class="tag">#{{ interest }}</p>
@@ -70,7 +104,6 @@ function goToEditProfile() {
   max-width: 600px;
   margin: auto;
   padding: 2rem;
-  background-color: #a0dbe6;
   font-family: Arial, sans-serif;
 }
 
