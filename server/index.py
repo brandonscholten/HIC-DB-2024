@@ -128,4 +128,58 @@ def get_user():
         "user_info" : stdout.decode()
     })
 
+@app.route('/delete_user/')
+def delete_user():
+    user_info = request.args.to_dict(flat=False)
+
+    #check that the user has a valid session
+    if not session_utils.validate_session(user_info['session_id'][0]):
+        return jsonify({"error" : "failed to validate session"})
+
+    #delete the user using the session id
+    process = sp.Popen(
+        [
+            'php', 'php/delete_user.php',
+            user_info['session_id'][0],
+        ],
+        stdout=sp.PIPE,
+        stderr=sp.PIPE
+    )
+    stdout, stderr = process.communicate()
+    if process.returncode != 0:
+        print(f"Error deleting user: {stderr.decode()}")
+
+    return jsonify({
+        "response" : stdout.decode()
+    })
+
+    #TODO: may want to immediately invalidate the session to prevent future errors
+
+@app.route('/create_event/')
+def create_event():
+    info = request.args.to_dict(flat=False)
+
+    #check that the user has a valid session
+    if not session_utils.validate_session(info['session_id'][0]):
+        return jsonify({"error" : "failed to validate session"})
+
+    #create an event associated with the user
+    process = sp.Popen(
+        [
+            'php', 'php/create_event.php',
+            info['session_id'][0],
+            info['event_name'][0],
+            info['description'][0],
+            info['place'][0]
+        ],
+        stdout = sp.PIPE,
+        stderr = sp.PIPE
+    )
+    stdout, stderr = process.communicate()
+    if process.returncode != 0:
+        print(f"Error creating event: {stderr.decode()}")
+
+    return jsonify({
+        "response" : stdout.decode()
+    })
 

@@ -2,7 +2,7 @@
 //tell php we are sending a JSON response
 header( "content-type: application/json" );
 
-//get data from args passed with python
+//get data from args passed with python 
 $user_name = $argv[1];
 $user_email = $argv[2];
 $user_pass = $argv[3];
