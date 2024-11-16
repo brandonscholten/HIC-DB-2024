@@ -2,5 +2,7 @@
 </script>
 
 <template>
-  <p>this is the my events page</p>
+  <p>this is the my events page
+    hi
+  </p>
 </template>
