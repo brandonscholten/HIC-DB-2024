@@ -38,6 +38,11 @@ const router = createRouter({
       path: '/my-events',
       name: 'my-events',
       component: () => import('../views/MyEvents.vue')
+    },
+    {
+      path: '/demo-places', // Demo Scene (Testing Cards)
+      name: 'demo-places',
+      component: () => import('../views/DemoPlaces.vue')
     }
   ]
 })

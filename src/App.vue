@@ -44,15 +44,22 @@ const login = async () => {
         <svg @click="navigate('/')" width="125" height="50" xmlns="http://www.w3.org/2000/svg">
           <text x="10" y="40" font-family="Arial" font-size="40" fill="white">K-GO</text>
         </svg>
-      <Button @click="navigate('/places', 'places')" :class="['left-button', { pressed: activeButton === 'places' }]"  text>Places</Button>
+      <Button @click="navigate('/places', 'places')" :class="['left-button', { pressed: activeButton === 'places' }]"  text>Places</Button> 
       <Button @click="navigate('/events', 'events')" :class="['right-button', { pressed: activeButton === 'events' }]" text>Events</Button>
     </div>
+
+    <div class="nav-debug-middle">
+        <!-- Demo Cards -->
+        <router-link to="/demo-places" class="nav-button">Demo Cards</router-link> 
+    </div>
+
     <div class="nav-right">
       <div class="login-links" v-if="!loggedIn">
         <a @click="login()">login</a>
         |
         <router-link to="/edit-profile">create account</router-link>
       </div>
+
       <div v-else style="display: flex; align-items: center;" >
         <Button @click="navigate('/favorite-places', 'favorite-places')" :class="['left-button', { pressed: activeButton === 'favorite-places' }]" text>My Places</Button>
         <Button @click="navigate('/my-events', 'my-events')" :class="['right-button', { pressed: activeButton === 'my-events' }]" text>My Events</Button>
@@ -78,6 +85,12 @@ nav{
   flex-direction: row;
 }
 .nav-right{
+  width: 50%;
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+}
+.nav-debug-middle{
   width: 50%;
   display: flex;
   flex-direction: row-reverse;
