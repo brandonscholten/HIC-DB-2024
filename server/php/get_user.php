@@ -16,7 +16,7 @@ $mysqli = new mysqli($sql_host, $sql_user, $sql_pass, $database);
 
 //TDOD replace this with a subquery?
 //use the session id to get the user id
-$id_query = $mysqli->prepare("SELECT user_id FROM user_session WHERE session_id = ?");
+$id_query = $mysqli->prepare("SELECT user_id FROM session WHERE session_id = ?");
 $id_query->bind_param("s", $session_id);
 if (!$id_query->execute()) {
     echo "Execute failed: " . htmlspecialchars($id_query->error);
