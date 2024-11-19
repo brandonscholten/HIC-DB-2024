@@ -11,7 +11,7 @@
         </div>
       </div>
 
-      <div id="places">
+      <div id="places"> 
         <div v-for="place in filteredPlaces" :key="place.id" class="place">
           <img :src="place.image" alt="Place image">
           <h3>{{ place.name }}</h3>

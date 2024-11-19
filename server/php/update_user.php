@@ -32,7 +32,7 @@ $user->close();
 
 if ($fetched_user_id != '') {
     //update the user
-    $update_stmt = $mysqli->prepare("UPDATE user SET name = ?, email = ?, password = ?, pronouns = ?, age = ?, photo = ? WHERE user.id = ?");
+    $update_stmt = $mysqli->prepare("UPDATE user SET name = ?, email = ?, password = ?, pronouns = ?, age = ?, photo = ? WHERE user.user_id = ?");
     if (!$update_stmt) {
         echo "error: " . $mysqli->error;
     }

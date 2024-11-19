@@ -17,7 +17,7 @@ $database = getenv("K_GO_DATA");
 $mysqli = new mysqli($sql_host, $sql_user, $sql_pass, $database);
 
 //get information about the session
-$session = $mysqli->prepare("SELECT user_id, expires_at FROM user_session WHERE id = ?");
+$session = $mysqli->prepare("SELECT user_id, expires_at FROM session WHERE session_id = ?");
 if (!$session) {
     echo "error: " . $mysqli->error;
 }
@@ -31,7 +31,7 @@ if ($session_exists) { //TODO: this is not running when a session exists but is 
 
     if ($current_time < $expires_at) {
         //update the session
-        $update_stmt = $mysqli->prepare("UPDATE user_session SET expires_at = ? WHERE id = ?");
+        $update_stmt = $mysqli->prepare("UPDATE user_session SET expires_at = ? WHERE session_id = ?");
         $update_stmt->bind_param("ss", $updated_time, $session_id);
         $update_stmt->execute();
         //send a response
@@ -39,7 +39,7 @@ if ($session_exists) { //TODO: this is not running when a session exists but is 
         echo json_encode($jsonAnswer);
     } else {
         //delete the session
-        $delete_stmt = $mysqli->prepare("DELETE FROM user_session WHERE session_id = ?");
+        $delete_stmt = $mysqli->prepare("DELETE FROM session WHERE session_id = ?");
         $delete_stmt->bind_param("s", $session_id);
         $delete_stmt->execute();
         //send a response

@@ -40,7 +40,7 @@ if ($fetched_user_pass != '') {
     if ($user_pass === $fetched_user_pass) {
         //create a session with the user's information, insert into session, return the session id
         //this information is used to authenticate the user before running other queries
-        $insert_stmt = $mysqli->prepare("INSERT INTO user_session(id, user_id, expires_at) VALUES (?, ?, ?)");
+        $insert_stmt = $mysqli->prepare("INSERT INTO session(id, user_id, expires_at) VALUES (?, ?, ?)");
         if (!$insert_stmt) {
             echo "error: " . $mysqli->error;
         }

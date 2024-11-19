@@ -20,7 +20,7 @@ $database = getenv("K_GO_DATA");
 $mysqli = new mysqli($sql_host, $sql_user, $sql_pass, $database);
 
 //check if the user already exists TODO: might want to make a view for this
-$existing_user = $mysqli->prepare("SELECT id FROM user WHERE email = ?");
+$existing_user = $mysqli->prepare("SELECT user_id FROM user WHERE email = ?");
 $existing_user->bind_param("s", $user_email);
 if (!$existing_user->execute()) {
     echo "Execute failed: " . htmlspecialchars($existing_user->error);
@@ -42,7 +42,7 @@ if ($fetched_user_id == '') {
     $insert_stmt->bind_param("ssssss", $user_name, $user_email, $user_pass, $user_pronouns, $user_age, $user_photo);
     $insert_stmt->execute();
     $insert_stmt->close();
-    $new_user = $mysqli->prepare("SELECT id FROM user WHERE email = ?");
+    $new_user = $mysqli->prepare("SELECT user_id FROM user WHERE email = ?");
     $new_user->bind_param("s", $user_email);
     if (!$new_user->execute()) {
         echo "Execute failed: " . htmlspecialchars($new_user->error);

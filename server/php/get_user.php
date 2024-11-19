@@ -16,7 +16,7 @@ $mysqli = new mysqli($sql_host, $sql_user, $sql_pass, $database);
 
 //TDOD replace this with a subquery?
 //use the session id to get the user id
-$id_query = $mysqli->prepare("SELECT user_id FROM user_session WHERE id = ?");
+$id_query = $mysqli->prepare("SELECT user_id FROM user_session WHERE session_id = ?");
 $id_query->bind_param("s", $session_id);
 if (!$id_query->execute()) {
     echo "Execute failed: " . htmlspecialchars($id_query->error);
@@ -29,7 +29,7 @@ $id_query->close();
 if ($fetched_user_id != 0) {
     //TODO these could probably be optimized
     //use the user id to get information about the user
-    $user = $mysqli->prepare("SELECT name, email, password, pronouns, age FROM user WHERE id = ?");
+    $user = $mysqli->prepare("SELECT name, email, password, pronouns, age FROM user WHERE user_id = ?");
     if (!$user) {
         echo "error: " . $mysqli->error;
     }
