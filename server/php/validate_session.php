@@ -31,7 +31,7 @@ if ($session_exists) { //TODO: this is not running when a session exists but is 
 
     if ($current_time < $expires_at) {
         //update the session
-        $update_stmt = $mysqli->prepare("UPDATE user_session SET expires_at = ? WHERE session_id = ?");
+        $update_stmt = $mysqli->prepare("UPDATE session SET expires_at = ? WHERE session_id = ?");
         $update_stmt->bind_param("ss", $updated_time, $session_id);
         $update_stmt->execute();
         //send a response
