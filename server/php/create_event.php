@@ -18,13 +18,17 @@ $database = getenv("K_GO_DATA");
 $mysqli = new mysqli($sql_host, $sql_user, $sql_pass, $database);
 
 //create the event
-$insert = $mysqli->prepare("INSERT INTO events(name, description, organizer, place) VALUES (?, ?, (SELECT user_id FROM user_session WHERE id = ?), ?)");
+$insert = $mysqli->prepare("INSERT INTO event(name, description, place) VALUES (?, ?, ?)");
 if (!$insert) {
     echo "error: " . $mysqli->error;
 }
-$insert->bind_param("ssss", $event_name, $description, $session_id, $place);
+
+$insert->bind_param("ssss", $event_name, $description, $place);
 $insert->execute();
 $insert->close();
+
+//add the organizer (SELECT user_id FROM user_session WHERE id = ?)
+$insert = $mysqli->prepare("INSERT INTO organizes(user_id, event_id) VALUES ()");
 
 //response
 $jsonAnswer = array('response' => 'event created');
