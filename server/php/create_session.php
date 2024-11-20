@@ -18,7 +18,7 @@ $database = getenv("K_GO_DATA");
 $mysqli = new mysqli($sql_host, $sql_user, $sql_pass, $database);
 
 //check for existence of user
-$user = $mysqli->prepare("SELECT id, password FROM user WHERE email = ?");
+$user = $mysqli->prepare("SELECT user_id, password FROM user WHERE email = ?");
 $user->bind_param("s", $user_email);
 if (!$user->execute()) {
     echo "Execute failed: " . htmlspecialchars($user->error);
@@ -40,7 +40,7 @@ if ($fetched_user_pass != '') {
     if ($user_pass === $fetched_user_pass) {
         //create a session with the user's information, insert into session, return the session id
         //this information is used to authenticate the user before running other queries
-        $insert_stmt = $mysqli->prepare("INSERT INTO session(id, user_id, expires_at) VALUES (?, ?, ?)");
+        $insert_stmt = $mysqli->prepare("INSERT INTO session(session_id, user_id, expires_at) VALUES (?, ?, ?)");
         if (!$insert_stmt) {
             echo "error: " . $mysqli->error;
         }

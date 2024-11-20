@@ -20,7 +20,7 @@ $database = getenv("K_GO_DATA");
 $mysqli = new mysqli($sql_host, $sql_user, $sql_pass, $database);
 
 //check that the user exists and fetch their id
-$user = $mysqli->prepare("SELECT id FROM user WHERE email = ?");
+$user = $mysqli->prepare("SELECT user_id FROM user WHERE email = ?");
 $user->bind_param("s", $user_email);
 if (!$user->execute()) {
     echo "Execute failed: " . htmlspecialchars($user->error);
