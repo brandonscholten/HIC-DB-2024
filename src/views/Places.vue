@@ -13,11 +13,11 @@
         <div v-for="place in filteredPlaces" class="place">
           <PlaceCard
             :title = place.name
-            description = "TODO add a description"
-            :rating="1"
-            mapsLink="https://maps.google.com"
+            :description = place.description
+            :rating= place.rating
+            :mapsLink= place.mapsLink
             :imagePath="place.image"
-            extendedDescription="TODO add an extended description?"
+            :extendedDescription= place.description
           />
         </div>
       </div>
@@ -45,7 +45,7 @@ import PlaceCard from '/src/components/PlaceCard.vue';
 
 const places = ref([]);
 
-const categories = ref(['Shopping', 'Public Places', 'Food and Drink', 'Outdoor Activities']);
+const categories = ref([]);
 const selectedCategories = ref([]);
 
 function getCookie(name) {
@@ -73,8 +73,10 @@ onMounted(async () => {
         throw new Error(`Response status: ${response.status}`);
       }
       const json = await response.json();
-      console.log("received response:");
-      console.log(json);
+      //console.log(JSON.parse(json.response));
+      const res = JSON.parse(json.response);
+      places.value = res;
+      categories.value = [...new Set(res.map(obj => obj.category))];
     } catch (error) {
       console.error(error.message);
     }
