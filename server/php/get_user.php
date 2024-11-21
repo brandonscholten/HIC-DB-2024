@@ -5,7 +5,7 @@ header( "content-type: application/json" );
 //get data from args passed with python
 $session_id = $argv[1];
 
-//get SQL connection information from envrionment variables
+//get SQL connection information from environment variables
 $sql_host = getenv("K_GO_HOST");
 $sql_user = getenv("K_GO_USER");
 $sql_pass = getenv("K_GO_PASS");
@@ -81,7 +81,5 @@ if ($fetched_user_id != 0) {
     $jsonAnswer = array('error' => 'unable to find session');
     echo json_encode($jsonAnswer);
 }
-
-
 
 ?>
