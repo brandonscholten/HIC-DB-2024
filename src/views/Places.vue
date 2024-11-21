@@ -26,7 +26,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import PlaceCard from '/src/components/PlaceCard.vue';
 
 // const places = ref([
@@ -48,29 +48,39 @@ const places = ref([]);
 const categories = ref(['Shopping', 'Public Places', 'Food and Drink', 'Outdoor Activities']);
 const selectedCategories = ref([]);
 
-//TODO: write an API call to get a list of places
-const baseURL = "https://localhost:5941/"
-if (getCookie('session_id')) {
-  //TODO only retrieve places that pertain to the user
-  try {
-    const response = await fetch(url+"get_user_places");
-  } catch {
-    console.error(error.message);
-  }
-} else {
-  //get all places from the database
-  try {
-    const response = await fetch(url+"get_places");
-    if (!response.ok) {
-      throw new Error(`Response status: ${response.status}`);
-    }
-    const json = await response.json();
-    console.log("received response:");
-    console.log(json);
-  } catch {
-    console.error(error.message);
-  }
+function getCookie(name) {
+  let matches = document.cookie.match(new RegExp(
+    "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+  ));
+  return matches ? decodeURIComponent(matches[1]) : undefined;
 }
+
+onMounted(async () => {
+  //API call to get a list of places
+  const baseURL = "http://localhost:5941/"
+  if (getCookie('session_id')) {
+    //TODO only retrieve places that pertain to the user
+    try {
+      const response = await fetch(baseURL+"get_user_places");
+    } catch (error) {
+      console.error(error.message);
+    }
+  } else {
+    //get all places from the database
+    try {
+      const response = await fetch(baseURL+"get_places");
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+      const json = await response.json();
+      console.log("received response:");
+      console.log(json);
+    } catch (error) {
+      console.error(error.message);
+    }
+  }
+});
+
 
 const filteredPlaces = computed(() => {
   if (selectedCategories.value.length === 0) {

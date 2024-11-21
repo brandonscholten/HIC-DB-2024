@@ -13,21 +13,21 @@ $mysqli = new mysqli($sql_host, $sql_user, $sql_pass, $database);
 
 $query = $mysqli->prepare("SELECT * FROM place");
 $query->execute();
-$query->bind_result($place);
+$query->bind_result($name, $primary_photo, $photos, $description, $rating, $maps_link, $suitable_for_all_ages, $allergens_present, $category));
 
 //create response array
 $places = [];
 while ($query->fetch_assoc()) {
     $places[] = array(
-        'name' => $place['name'],
-        'image' => $place['primary_photo'],
-        'photos' => $place['photos'],
-        'description' => $place['description'],
-        'rating' => $place['rating'],
-        'mapsLink' => $place['link_to_google_maps'],
-        'allAges' => $places['suitable_for_all_ages'],
-        'allergensPresent' => $places['allergens_present'],
-        'category' => $places['category']
+        'name' => $name,
+        'image' => $primary_photo,
+        'photos' => $photos,
+        'description' => $description,
+        'rating' => $rating,
+        'mapsLink' => $maps_link,
+        'allAges' => $suitable_for_all_ages,
+        'allergensPresent' => $allergens_present,
+        'category' => $category
     );
 }
 
