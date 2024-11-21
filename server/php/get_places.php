@@ -13,7 +13,7 @@ $mysqli = new mysqli($sql_host, $sql_user, $sql_pass, $database);
 
 $query = $mysqli->prepare("SELECT * FROM place");
 $query->execute();
-$query->bind_result($name, $primary_photo, $photos, $description, $rating, $maps_link, $suitable_for_all_ages, $allergens_present, $category);
+$query->bind_result($id, $name, $primary_photo, $photos, $description, $rating, $maps_link, $suitable_for_all_ages, $allergens_present, $category);
 
 //create response array
 $places = [];
