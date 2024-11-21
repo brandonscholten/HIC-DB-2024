@@ -17,7 +17,7 @@ $query->bind_result($name, $primary_photo, $photos, $description, $rating, $maps
 
 //create response array
 $places = [];
-while ($query->fetch_assoc()) {
+while ($query->fetch()) {
     $places[] = array(
         'name' => $name,
         'image' => $primary_photo,
