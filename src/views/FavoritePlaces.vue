@@ -4,12 +4,13 @@
 
     <div class="content">
       <div id="places">
-        <div v-for="place in favoritePlaces" :key="place.id" class="place">
+        <div v-for="place in places" :key="place.id" class="place">
           <img :src="place.image" alt="Place image">
           <h3>{{ place.name }}</h3>
         </div>
       </div>
     </div>
+  </div>
 </template>
 
 <script setup>
