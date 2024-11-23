@@ -183,3 +183,20 @@ def create_event():
         "response" : stdout.decode()
     })
 
+@app.route('/get_places')
+def get_places():
+    #get an object with all of the place information in the database
+    #TODO: in the future if there's a significant number of places, loading them all at once is bad
+    process = sp.Popen(
+        ['php', 'php/get_places.php'],
+        stdout = sp.PIPE,
+        stderr = sp.PIPE
+    )
+    stdout, stderr = process.communicate()
+    if process.returncode != 0:
+        print(f"Error retrieving places: {stderr.decode()}")
+
+    return jsonify({
+        "response" : stdout.decode()
+    })
+

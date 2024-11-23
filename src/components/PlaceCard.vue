@@ -77,6 +77,7 @@ export default {
   overflow: hidden;
   background-color: rgba(255, 255, 255, 0.54);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  /* max-width: 550px; */
 }
 
 .place-info {
