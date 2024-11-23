@@ -15,7 +15,7 @@ $database = getenv("K_GO_DATA");
 $mysqli = new mysqli($sql_host, $sql_user, $sql_pass, $database);
 
 //delete user interests and restrictions by session_id
-$delete = $mysqli->prepare("DELETE interests, restrictions FROM interests INNER JOIN restrictions WHERE interests.user_id = restrictions.user_id and interests.user_id = (SELECT user_id FROM user_session WHERE id = ?)");
+$delete = $mysqli->prepare("DELETE interests, restrictions FROM interests INNER JOIN restrictions WHERE interests.user_id = restrictions.user_id and interests.user_id = (SELECT user_id FROM session WHERE id = ?)");
 if (!$delete) {
     echo "error: " . $mysqli->error;
 }
@@ -24,7 +24,7 @@ $delete->execute();
 $delete->close();
 
 //delete the user by session_id
-$delete = $mysqli->prepare("DELETE FROM user WHERE id = (SELECT user_id FROM user_session WHERE id = ?)");
+$delete = $mysqli->prepare("DELETE FROM user WHERE user_id = (SELECT user_id FROM session WHERE session_id = ?)");
 if (!$delete) {
     echo "error: " . $mysqli->error;
 }

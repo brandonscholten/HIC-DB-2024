@@ -56,7 +56,7 @@ const createProfile = async(profileData) => {
   //construct url
 
   const url = (
-    'http://localhost:5000/create_user/?name='
+    'http://localhost:5941/create_user/?name='
     + profileData.name + '&email=' + profileData.email
     + '&password=' + profileData.password
     + '&pronouns=' + profileData.pronouns
@@ -83,7 +83,7 @@ const updateProfile = async (profileData) => {
   //send request to update profile
 
   const url = (
-    'http://localhost:5000/update_user/?session_id='
+    'http://localhost:5941/update_user/?session_id='
     + getCookie('session_id') + '&name='
     + profileData.name + '&email=' + profileData.email
     + '&password=' + profileData.password + '&pronouns='
@@ -126,7 +126,7 @@ onMounted(async () => {
   if (getCookie("session_id")) {
     //TODO: if a session token is stored, attempt to define profileData.value
     //send request to get logged in user's information
-    const url = "http://localhost:5000/get_user/?session_id="+getCookie('session_id')
+    const url = "http://localhost:5941/get_user/?session_id="+getCookie('session_id')
     try { 
       const response = await fetch(url);
       if (!response.ok) {

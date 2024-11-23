@@ -33,7 +33,7 @@ onMounted(async () => {
   if (getCookie("session_id")) {
     //TODO: if a session token is stored, attempt to define profileData.value
     //send request to get logged in user's information
-    const url = "http://localhost:5000/get_user/?session_id="+getCookie('session_id')
+    const url = "http://localhost:5941/get_user/?session_id="+getCookie('session_id')
     try { 
       const response = await fetch(url);
       if (!response.ok) {

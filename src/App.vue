@@ -19,7 +19,7 @@ const login = async () => {
   let email = prompt("email:");
   let password = prompt("password:");
   //send email and password to the flask server TODO: change url to a publicly available address
-  const url = 'http://localhost:5000/login/'+email+'/'+password //TODO: password should not be plaintext lol
+  const url = 'http://localhost:5941/login/'+email+'/'+password //TODO: password should not be plaintext lol
   try {
     const response = await fetch(url);
     if (!response.ok) {
@@ -107,6 +107,9 @@ Button{
   background-color: white;
   border-radius: 0;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+}
+Button:hover{
+  background-color: white !important;
 }
 .pressed{
   box-shadow: none !important;
