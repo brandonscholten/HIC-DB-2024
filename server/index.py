@@ -215,3 +215,28 @@ def get_events():
     return jsonify({
         "response" : stdout.decode()
     })
+
+@app.route('/get_favorite_places')
+def get_favorite_places():
+    info = request.args.to_dict(flat=False)
+
+    #check that the user has a valid session
+    if not session_utils.validate_session(info['session_id'][0]):
+        return jsonify({"error" : "falied to validate session"})
+
+    #get places that the user has added to their favorites
+    process = sp.Popen(
+        [
+            'php', 'php/get_favorite_places.php',
+            info['session_id'][0]
+        ],
+        stdout = sp.PIPE,
+        stderr = sp.PIPE
+    )
+    stdout, stderr = process.communicate()
+    if process.returncode != 0:
+        print(f"Error getting favorite places: {stderr.decode()}")
+
+    return jsonify({
+        "response" : stdout.decode()
+    })
