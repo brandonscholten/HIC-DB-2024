@@ -30,7 +30,7 @@ $query->bind_result(
 //create response array
 $events = [];
 while ($query->fetch()) {
-    $places[] = array(
+    $events[] = array(
         "event_name" => $event_name,
         "organizer_name" => $organizer_name,
         "event_description" => $event_description,
