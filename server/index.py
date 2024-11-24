@@ -216,7 +216,7 @@ def get_events():
         "response" : stdout.decode()
     })
 
-@app.route('/get_favorite_places')
+@app.route('/get_favorite_places/')
 def get_favorite_places():
     info = request.args.to_dict(flat=False)
 
