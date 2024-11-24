@@ -212,6 +212,6 @@ def get_events():
     if process.returncode != 0:
         print(f"Error retrieving events {stderr.decode()}")
 
-    return jsonfiy({
+    return jsonify({
         "response" : stdout.decode()
     })
