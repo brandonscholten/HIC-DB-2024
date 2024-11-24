@@ -18,8 +18,10 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue';
-import EventCard from '@/components/EventCard.vue';
+import { ref, onMounted, inject } from 'vue';
+import PlaceCard from '@/components/PlaceCard.vue';
+
+const loggedIn = inject('loggedIn');
 
 const places = ref([]);
 
@@ -33,6 +35,7 @@ function getCookie(name) {
 onMounted(async () => {
   //API call to get a list of favorite places
   if (getCookie('session_id')) {
+    loggedIn.value = true;
     try {
       const response = await fetch('http://localhost:5941/get_favorite_places/?session_id='+getCookie('session_id'));
       if (!response.ok) {
@@ -40,7 +43,7 @@ onMounted(async () => {
       }
       const json = await response.json();
       const res = JSON.parse(json.response);
-      events.value = res;
+      places.value = res;
     } catch (error) {
       console.error(error.message);
     }
@@ -49,22 +52,14 @@ onMounted(async () => {
   }
 });
 
-// Split the events array into two halves
-const firstHalf = computed(() => {
-  return events.value.slice(0, Math.ceil(events.value.length / 2));
-});
-
-const secondHalf = computed(() => {
-  return events.value.slice(Math.ceil(events.value.length / 2));
-});
-
 </script>
 
 <style scoped>
 
-h1 {
-  font-family: Arial;
-  text-align: left;
+body {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  background-color: #f4f4f9;
 }
 
 #app {
@@ -73,62 +68,53 @@ h1 {
   align-items: center;
 }
 
+h1 {
+  font-size: 2rem;
+  color: #333;
+}
+
 .content {
-  
+  padding-top: 50px;
   padding-bottom: 50px;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   width: 100%;
   max-width: 1500px;
 }
 
 #places {
   display: flex;
-  justify-content: space-between;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-left: 10px;
+  gap: 20px;
   width: 100%;
-  margin-left: 100px;
-  margin-right: 100px;
 }
 
-.column {
-  width: 50%;
-  margin: 25px;
+.place {
+  flex: 1 1 calc(50% - 20px);
+  max-width: calc(50% - 20px);
+  box-sizing: border-box;
 }
 
-.event {
-  margin-bottom: 20px;
-}
-
-@media screen and (max-width: 1050px) {
-  #events {
-  display: flex;
-  margin: 25px;
-  justify-content: space-between;
-  width: 100%;
-  margin-left: 0px;
-  margin-right: 0px;
-}
-
-  .column {
-    width: 100%;
-    min-width: 300px;
-    margin: 25px;
+@media screen and (max-width: 1222px) {
+  .content{
+    flex-direction: column;
+    overflow: hidden;
   }
 }
 
-@media screen and (max-width: 800px) {
-  #events {
+@media screen and (max-width: 920px) {
+  #places {
     flex-direction: column;
-    margin: 25px;
-    align-items: center;
+    align-items: stretch;
     flex-wrap: nowrap;
     width: 100%;
   }
-
-  .column {
-    width: 100%;
-    min-width: 300px;
-    margin: 0px;
+  .place {
+    flex: 1 1 calc(100% - 20px);
+    max-width: calc(100% - 20px);
   }
 }
+
 </style>

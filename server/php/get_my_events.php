@@ -1,6 +1,9 @@
 <?php
-//tell php we are sending a JSON response
+//tell php we are sendign a JSON response
 header("content-type: application/json");
+
+//get data from args with Python
+$session_id = $argv[1];
 
 //get SQL connection information from environment variables
 $sql_host = getenv("K_GO_HOST");
@@ -11,8 +14,14 @@ $database = getenv("K_GO_DATA");
 //connect to the SQL server
 $mysqli = new mysqli($sql_host, $sql_user, $sql_pass, $database);
 
-//get event and place information from event_component_view
-$query = $mysqli->prepare("SELECT * FROM event_component_view");
+//select from event component view where user.id = event.organizer
+$query = $mysqli->prepare("
+    SELECT ev.*
+    FROM organizes org
+    JOIN event_component_view ev ON org.user_id = ev.organizer_id
+    WHERE org.user_id = (SELECT user_id FROM session WHERE session_id = ?)
+");
+$query->bind_param("s", $session_id);
 $query->execute();
 $query->bind_result(
     $organizer_id,
@@ -49,5 +58,6 @@ $query->close();
 
 //send information back to the client
 echo json_encode($events);
+
 
 ?>
