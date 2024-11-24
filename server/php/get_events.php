@@ -44,7 +44,7 @@ while ($query->fetch()) {
     );
 }   
 
-$query.close();
+$query->close();
 
 //send information back to the client
 echo json_encode($events);
