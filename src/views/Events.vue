@@ -109,23 +109,7 @@ import EventCard from '@/components/EventCard.vue';
 //   }
 // ]);
 
-const events = ref({});
-
-function getCookie(name) {
-  let matches = document.cookie.match(new RegExp(
-    "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
-  ));
-  return matches ? decodeURIComponent(matches[1]) : undefined;
-}
-
-// Split the events array into two halves
-const firstHalf = computed(() => {
-  return events.value.slice(0, Math.ceil(events.value.length / 2));
-});
-
-const secondHalf = computed(() => {
-  return events.value.slice(Math.ceil(events.value.length / 2));
-});
+const events = ref([]);
 
 onMounted(async () => {
   //API call to get a list of all events
@@ -140,6 +124,15 @@ onMounted(async () => {
   } catch (error) {
     console.error(error.message);
   }
+});
+
+// Split the events array into two halves
+const firstHalf = computed(() => {
+  return events.value.slice(0, Math.ceil(events.value.length / 2));
+});
+
+const secondHalf = computed(() => {
+  return events.value.slice(Math.ceil(events.value.length / 2));
 });
 
 </script>
