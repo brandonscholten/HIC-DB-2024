@@ -16,7 +16,7 @@ $mysqli = new mysqli($sql_host, $sql_user, $sql_pass, $database);
 
 //select from favorite places where user.id = favorite_place.user_id
 //and from place where favorite_place.place_id = place.id
-$query = $myqli->prepare("
+$query = $mysqli->prepare("
     SELECT p.* 
     FROM favorite_places fp
     JOIN place p ON fp.place_id = p.place_id 
