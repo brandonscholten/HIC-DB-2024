@@ -5,6 +5,7 @@ from flask import Flask, session, request, jsonify
 import subprocess as sp
 import session_utils
 import json
+import bcrypt
 
 from flask_cors import CORS
 
@@ -18,7 +19,7 @@ CORS(app)
 def login(email, password):
     #TODO: hash password to match whatever is in the database
     #validate credentials, create a session if credentials are valid
-    return session_utils.create_session(email, password)
+    return session_utils.create_session(email, bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8'))
 
 @app.route("/create_user/")
 def create_user():
@@ -29,7 +30,7 @@ def create_user():
             'php','./php/create_user.php', 
             user_info['name'][0], 
             user_info['email'][0],
-            user_info['password'][0], 
+            bcrypt.hashpw(user_info['password'][0].encode('utf-8'), bcrypt.gensalt()).decode('utf-8'), 
             user_info['pronouns'][0],
             user_info['age'][0],
             user_info['photo'][0],
@@ -74,7 +75,7 @@ def update_user():
             'php','./php/update_user.php', 
             user_info['name'][0], 
             user_info['email'][0],
-            user_info['password'][0], 
+            bcrypt.hashpw(user_info['password'][0].encode('utf-8'), bcrypt.gensalt()).decode('utf-8'), 
             user_info['pronouns'][0],
             user_info['age'][0],
             user_info['photo'][0],
