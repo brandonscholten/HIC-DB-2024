@@ -200,3 +200,18 @@ def get_places():
         "response" : stdout.decode()
     })
 
+@app.route("/get_events")
+def get_events():
+    #TODO: see TODO on get_places route, this will suffer from the same issue
+    process = sp.Popen(
+        ['php', 'php/get_events.php'],
+        stdout = sp.PIPE,
+        stderr = sp.PIPE
+    )
+    stdout, stderr = process.communicate()
+    if process.returncode != 0:
+        print(f"Error retrieving events {stderr.decode()}")
+
+    return jsonfiy({
+        "response" : stdout.decode()
+    })
