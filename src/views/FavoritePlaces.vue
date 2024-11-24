@@ -32,6 +32,13 @@ function getCookie(name) {
   return matches ? decodeURIComponent(matches[1]) : undefined;
 }
 
+function deleteCookie() {
+  let allCookies = document.cookie.split(';');
+  for (let i = 0; i< allCookies.length; i++) {
+    document.cookie = allCookies[i] + "=;expires=" + new Date(0).toUTCString();
+  }
+}
+
 onMounted(async () => {
   //API call to get a list of favorite places
   if (getCookie('session_id')) {
@@ -49,6 +56,7 @@ onMounted(async () => {
     }
   } else {
     alert('no valid session!');
+    deleteCookie();
   }
 });
 

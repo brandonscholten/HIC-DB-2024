@@ -28,6 +28,13 @@ function getCookie(name) {
   return matches ? decodeURIComponent(matches[1]) : undefined;
 }
 
+function deleteCookie() {
+  let allCookies = document.cookie.split(';');
+  for (let i = 0; i< allCookies.length; i++) {
+    document.cookie = allCookies[i] + "=;expires=" + new Date(0).toUTCString();
+  }
+}
+
 // Fetch profile data on component mount (optional)
 onMounted(async () => {
   if (getCookie("session_id")) {
@@ -51,6 +58,7 @@ onMounted(async () => {
       profileData.value.allergies = user_info.restrictions;
     } catch (error) {
       console.error(error.message);
+      deleteCookie();
     }
   }
 });
