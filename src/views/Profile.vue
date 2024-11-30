@@ -28,12 +28,19 @@ function getCookie(name) {
   return matches ? decodeURIComponent(matches[1]) : undefined;
 }
 
+function deleteCookie() {
+  let allCookies = document.cookie.split(';');
+  for (let i = 0; i< allCookies.length; i++) {
+    document.cookie = allCookies[i] + "=;expires=" + new Date(0).toUTCString();
+  }
+}
+
 // Fetch profile data on component mount (optional)
 onMounted(async () => {
   if (getCookie("session_id")) {
     //TODO: if a session token is stored, attempt to define profileData.value
     //send request to get logged in user's information
-    const url = "http://localhost:5000/get_user/?session_id="+getCookie('session_id')
+    const url = "http://localhost:5941/get_user/?session_id="+getCookie('session_id')
     try { 
       const response = await fetch(url);
       if (!response.ok) {
@@ -51,6 +58,7 @@ onMounted(async () => {
       profileData.value.allergies = user_info.restrictions;
     } catch (error) {
       console.error(error.message);
+      deleteCookie();
     }
   }
 });

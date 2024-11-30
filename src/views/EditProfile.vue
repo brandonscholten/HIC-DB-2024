@@ -31,6 +31,13 @@ function getCookie(name) {
   return matches ? decodeURIComponent(matches[1]) : undefined;
 }
 
+function deleteCookie() {
+  let allCookies = document.cookie.split(';');
+  for (let i = 0; i< allCookies.length; i++) {
+    document.cookie = allCookies[i] + "=;expires=" + new Date(0).toUTCString();
+  }
+}
+
 // construct url suffix for interests and restrictions
 function getUrlSuffix(profileData) {
   let interestString = ""; 
@@ -56,7 +63,7 @@ const createProfile = async(profileData) => {
   //construct url
 
   const url = (
-    'http://localhost:5000/create_user/?name='
+    'http://localhost:5941/create_user/?name='
     + profileData.name + '&email=' + profileData.email
     + '&password=' + profileData.password
     + '&pronouns=' + profileData.pronouns
@@ -75,6 +82,7 @@ const createProfile = async(profileData) => {
     document.cookie = "session_id="+JSON.parse(json.session_message).session_id+";";
   } catch (error) {
     console.error(error.message);
+    deleteCookie();
   }
 
 }
@@ -83,7 +91,7 @@ const updateProfile = async (profileData) => {
   //send request to update profile
 
   const url = (
-    'http://localhost:5000/update_user/?session_id='
+    'http://localhost:5941/update_user/?session_id='
     + getCookie('session_id') + '&name='
     + profileData.name + '&email=' + profileData.email
     + '&password=' + profileData.password + '&pronouns='
@@ -99,6 +107,7 @@ const updateProfile = async (profileData) => {
     const json = await response.json();
   } catch (error) {
     console.error(error.message);
+    deleteCookie();
   }
   
 }
@@ -126,7 +135,7 @@ onMounted(async () => {
   if (getCookie("session_id")) {
     //TODO: if a session token is stored, attempt to define profileData.value
     //send request to get logged in user's information
-    const url = "http://localhost:5000/get_user/?session_id="+getCookie('session_id')
+    const url = "http://localhost:5941/get_user/?session_id="+getCookie('session_id')
     try { 
       const response = await fetch(url);
       if (!response.ok) {
@@ -156,6 +165,7 @@ onMounted(async () => {
       profileData.value.allergies = restrictionString;
     } catch (error) {
       console.error(error.message);
+      deleteCookie();
     }
   }
 });

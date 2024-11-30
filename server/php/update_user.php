@@ -20,7 +20,7 @@ $database = getenv("K_GO_DATA");
 $mysqli = new mysqli($sql_host, $sql_user, $sql_pass, $database);
 
 //check that the user exists and fetch their id
-$user = $mysqli->prepare("SELECT id FROM user WHERE email = ?");
+$user = $mysqli->prepare("SELECT user_id FROM user WHERE email = ?");
 $user->bind_param("s", $user_email);
 if (!$user->execute()) {
     echo "Execute failed: " . htmlspecialchars($user->error);
@@ -32,7 +32,7 @@ $user->close();
 
 if ($fetched_user_id != '') {
     //update the user
-    $update_stmt = $mysqli->prepare("UPDATE user SET name = ?, email = ?, password = ?, pronouns = ?, age = ?, photo = ? WHERE user.id = ?");
+    $update_stmt = $mysqli->prepare("UPDATE user SET name = ?, email = ?, password = ?, pronouns = ?, age = ?, photo = ? WHERE user.user_id = ?");
     if (!$update_stmt) {
         echo "error: " . $mysqli->error;
     }

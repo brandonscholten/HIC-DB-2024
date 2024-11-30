@@ -5,6 +5,7 @@ from flask import Flask, session, request, jsonify
 import subprocess as sp
 import session_utils
 import json
+import bcrypt
 
 from flask_cors import CORS
 
@@ -18,7 +19,7 @@ CORS(app)
 def login(email, password):
     #TODO: hash password to match whatever is in the database
     #validate credentials, create a session if credentials are valid
-    return session_utils.create_session(email, password)
+    return session_utils.create_session(email, bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8'))
 
 @app.route("/create_user/")
 def create_user():
@@ -29,7 +30,7 @@ def create_user():
             'php','./php/create_user.php', 
             user_info['name'][0], 
             user_info['email'][0],
-            user_info['password'][0], 
+            bcrypt.hashpw(user_info['password'][0].encode('utf-8'), bcrypt.gensalt()).decode('utf-8'), 
             user_info['pronouns'][0],
             user_info['age'][0],
             user_info['photo'][0],
@@ -74,7 +75,7 @@ def update_user():
             'php','./php/update_user.php', 
             user_info['name'][0], 
             user_info['email'][0],
-            user_info['password'][0], 
+            bcrypt.hashpw(user_info['password'][0].encode('utf-8'), bcrypt.gensalt()).decode('utf-8'), 
             user_info['pronouns'][0],
             user_info['age'][0],
             user_info['photo'][0],
@@ -183,3 +184,60 @@ def create_event():
         "response" : stdout.decode()
     })
 
+@app.route('/get_places')
+def get_places():
+    #get an object with all of the place information in the database
+    #TODO: in the future if there's a significant number of places, loading them all at once is bad
+    process = sp.Popen(
+        ['php', 'php/get_places.php'],
+        stdout = sp.PIPE,
+        stderr = sp.PIPE
+    )
+    stdout, stderr = process.communicate()
+    if process.returncode != 0:
+        print(f"Error retrieving places: {stderr.decode()}")
+
+    return jsonify({
+        "response" : stdout.decode()
+    })
+
+@app.route("/get_events")
+def get_events():
+    #TODO: see TODO on get_places route, this will suffer from the same issue
+    process = sp.Popen(
+        ['php', 'php/get_events.php'],
+        stdout = sp.PIPE,
+        stderr = sp.PIPE
+    )
+    stdout, stderr = process.communicate()
+    if process.returncode != 0:
+        print(f"Error retrieving events {stderr.decode()}")
+
+    return jsonify({
+        "response" : stdout.decode()
+    })
+
+@app.route('/get_favorite_places/')
+def get_favorite_places():
+    info = request.args.to_dict(flat=False)
+
+    #check that the user has a valid session
+    if not session_utils.validate_session(info['session_id'][0]):
+        return jsonify({"error" : "falied to validate session"})
+
+    #get places that the user has added to their favorites
+    process = sp.Popen(
+        [
+            'php', 'php/get_favorite_places.php',
+            info['session_id'][0]
+        ],
+        stdout = sp.PIPE,
+        stderr = sp.PIPE
+    )
+    stdout, stderr = process.communicate()
+    if process.returncode != 0:
+        print(f"Error getting favorite places: {stderr.decode()}")
+
+    return jsonify({
+        "response" : stdout.decode()
+    })
