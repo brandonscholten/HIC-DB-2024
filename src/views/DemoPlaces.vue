@@ -1,76 +1,108 @@
 <template>
-    <div class="events-page">
-      <h1>Events</h1>
-  
-      <!-- Event 1 with Place Information -->
+  <div class="demo-page">
+    <h1>DEMO: Events/Places</h1>
+
+    <!-- Events Section -->
+    <div class="events-section">
+      <h2>Upcoming Events</h2>
+
+      <!-- Event 1 -->
       <EventCard
         title="Bubble Tea Book Club"
         organizer="Ming's Bubble Tea"
-        description="Mon: 9:00 PM"
+        description="Monday at 9:00 PM - Join us for a cozy book discussion while enjoying bubble tea."
         avatar-url="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSurYFf7p25tYNhg7WwfLGNtcepYWAzrg77QA&s"
         placeTitle="Ming's Bubble Tea"
-        placeDescription="Bubble Tea and Waffles"
+        placeDescription="A popular bubble tea spot with waffles and other sweet treats."
         :placeRating="4"
         placeMapsLink="https://maps.app.goo.gl/5dTnNqdJD5RJWngs6"
         placeImagePath="https://s3-media0.fl.yelpcdn.com/bphoto/laWJlvT5aDYTl-YWc42VIQ/348s.jpg"
-        placePreviewImagePath="https://example.com/preview2.jpg"
-        placeExtendedDescription="The ultimate destination for bubble tea lovers!"
-        :placeExtraDetails="['Wide selection of flavors', 'Pet-friendly outdoor seating', 'Student discounts available']"
+        placeExtendedDescription="Enjoy a wide variety of bubble tea flavors and cozy up with a book. Perfect for all book lovers!"
+        :placeExtraDetails="['Student discounts available', 'Free WiFi', 'Outdoor seating']"
+        :bigPlaceImageLinks="[
+          'https://s3-media0.fl.yelpcdn.com/bphoto/laWJlvT5aDYTl-YWc42VIQ/348s.jpg',
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSurYFf7p25tYNhg7WwfLGNtcepYWAzrg77QA&s'
+        ]"
+        googleMapsEmbedUrl="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d96128.42137999351!2d-81.40288484179692!3d41.15606399999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88313b29c02bcec7%3A0x89716572f83e24fe!2sMing&#39;s%20Bubble%20Tea!5e0!3m2!1sen!2sus!4v1732436772748!5m2!1sen!2sus"
       />
-  
-      <!-- Event 2 without Place Information -->
+
+      <!-- Event 2 -->
       <EventCard
-        title="Cat"
-        organizer="Kibby"
-        description="Cuddle with cats"
+        title="TEMPLATE FOR USE"
+        organizer="WHO?"
+        description="TIME - INFO."
+      placeTitle="PLACE NAME"
+        placeDescription="ACTIVITY / BRIEF PLACE INFO."
+        :placeRating="200"
         avatar-url="https://i.natgeofe.com/n/4cebbf38-5df4-4ed0-864a-4ebeb64d33a4/NationalGeographic_1468962_3x4.jpg"
-      />
-  
-      <!-- Event 3 with Place Information -->
-      <EventCard
-        title="Scribbles HIC Meeting"
-        organizer="V"
-        description=""
-        avatar-url="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-OB8qV6lOsaLdSoD38foSZzjtJ1NQkGKOjA&s"
-        placeTitle="Scribbles Coffee"
-        placeDescription=""
-        :placeRating="5"
-        placeMapsLink="https://maps.app.goo.gl/ipvMbZxBwTJ2mRMm6"
-        placeImagePath=""
-        placeExtendedDescription=""
-        :placeExtraDetails="['Hopefully this is enough for now', '', '']"
-      />
-  
-      <!-- Standalone PlaceCard (without Event) -->
-      <h1>Popular Places</h1>
-      <PlaceCard
-        title="Place"
-        description=""
-        :rating="1"
-        mapsLink=""
-        imagePath=""
-        previewImagePath="https://example.com/library-preview.jpg"
-        extendedDescription=""
-        :extraDetails="['', '', '']"
+        placeMapsLink="https://maps.app.goo.gl/5dTnNqdJD5RJWngs6"
+        placeImagePath="https://s3-media0.fl.yelpcdn.com/bphoto/laWJlvT5aDYTl-YWc42VIQ/348s.jpg"
+        placeExtendedDescription="LONG INFO"
+        :placeExtraDetails="['IMPORTANT', 'ATTENTION', 'CATCHING']"
+        :bigPlaceImageLinks="[
+          'https://s3-media0.fl.yelpcdn.com/bphoto/laWJlvT5aDYTl-YWc42VIQ/348s.jpg',
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSurYFf7p25tYNhg7WwfLGNtcepYWAzrg77QA&s'
+        ]"
+        googleMapsEmbedUrl="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d96128.42137999351!2d-81.40288484179692!3d41.15606399999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88313b29c02bcec7%3A0x89716572f83e24fe!2sMing&#39;s%20Bubble%20Tea!5e0!3m2!1sen!2sus!4v1732436772748!5m2!1sen!2sus"
       />
     </div>
-  </template>
-  
-  <script>
-  import EventCard from '/src/components/EventCard.vue';
-  import PlaceCard from '/src/components/PlaceCard.vue';
-  
-  export default {
-    components: {
-      EventCard,
-      PlaceCard,
-    },
-  };
-  </script>
-  
-  <style scoped>
-  .events-page {
-    padding: 20px;
-  }
-  </style>
-  
+
+    <!-- Places Section -->
+    <div class="places-section">
+      <h2>Popular Places</h2>
+
+      <!-- Place 1 -->
+      <PlaceCard
+      placeTitle="Ming's Bubble Tea"
+      placeDescription="A cozy place for tea lovers. Bubble tea and waffles are our specialty!"
+        :placeRating="4"
+        placeMapsLink="https://maps.app.goo.gl/5dTnNqdJD5RJWngs6"
+        placeImagePath="https://s3-media0.fl.yelpcdn.com/bphoto/laWJlvT5aDYTl-YWc42VIQ/348s.jpg"
+        placeExtendedDescription="Ming's Bubble Tea offers a FOOBAR FOOBAR FOOBAR FOOBAR FOOBAR FOOBAR! FOOBAR FOOBAR FOOBAR FOOBAR FOOBAR FOOBAR       FOOBAR, FOOBARFOOBARFOOBARFOOBAR FOOBAR"
+        :placeExtraDetails="['Student discounts available', 'Free WiFi', 'Outdoor seating']"
+        :bigPlaceImageLinks="[
+          'https://s3-media0.fl.yelpcdn.com/bphoto/laWJlvT5aDYTl-YWc42VIQ/348s.jpg',
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSurYFf7p25tYNhg7WwfLGNtcepYWAzrg77QA&s'
+        ]"
+        googleMapsEmbedUrl="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d96128.42137999351!2d-81.40288484179692!3d41.15606399999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88313b29c02bcec7%3A0x89716572f83e24fe!2sMing&#39;s%20Bubble%20Tea!5e0!3m2!1sen!2sus!4v1732436772748!5m2!1sen!2sus"
+      />
+    </div>
+  </div>
+</template>
+
+<script>
+import EventCard from '/src/components/EventCard.vue';
+import PlaceCard from '/src/components/PlaceCard.vue';
+
+export default {
+  components: {
+    EventCard,
+    PlaceCard,
+  },
+};
+</script>
+
+<style scoped>
+.demo-page {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+}
+
+.events-section,
+.places-section {
+  margin-bottom: 40px;
+}
+
+.events-section h2,
+.places-section h2 {
+  font-size: 2em;
+  margin-bottom: 20px;
+}
+
+/* Ensure consistent card styling throughout the page */
+.event-card,
+.place-card {
+  margin-bottom: 30px;
+}
+</style>
