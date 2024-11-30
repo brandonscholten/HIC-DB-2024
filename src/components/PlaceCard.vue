@@ -1,35 +1,64 @@
-<!-- PlaceCard.vue -->
 <template>
   <div class="place-card">
+    <!-- PlaceCard Section -->
     <div class="place-info">
-      <!-- Title and Description -->
-      <h2>{{ title }}</h2>
-      <p>{{ description }}</p>
+      <div class="info-left">
+        <h2>{{ placeTitle }}</h2>
+        <p>{{ placeDescription }}</p>
 
-      <!-- Rating -->
-      <div class="rating">
-        <span v-for="star in 5" :key="star" class="star">
-          {{ star <= rating ? '★' : '☆' }}
-        </span>
+        <!-- Rating -->
+        <div class="rating">
+          <span v-for="star in 5" :key="star" class="star">
+            {{ star <= placeRating ? '★' : '☆' }}
+          </span>
+        </div>
+
+        <!-- Google Maps Link -->
+        <a :href="placeMapsLink" target="_blank" class="maps-link">View on Google Maps</a>
+
+        <!-- More Info Button -->
+        <button @click="toggleMoreInfo" class="more-info-button">More Info</button>
       </div>
 
-      <!-- Google Maps Link -->
-      <a :href="mapsLink" target="_blank" class="maps-link">View on Google Maps</a>
-
-      <!-- More Info Button -->
-      <button @click="toggleMoreInfo" class="more-info-button">More Info</button>
+      <!-- Main Image as Background -->
+      <div class="place-image" :style="placeImagePath ? { backgroundImage: `url(${placeImagePath})` } : {}"></div>
     </div>
-
-    <!-- Main Image as Background -->
-    <div class="place-image" :style="{ backgroundImage: `url(${imagePath})` }"></div>
 
     <!-- Additional Information Modal -->
     <div v-if="showMoreInfo" class="modal-overlay" @click="toggleMoreInfo">
       <div class="modal-content" @click.stop>
-        <h3>More About {{ title }}</h3>
-        <p>{{ extendedDescription }}</p>
+        <h3>More About {{ placeTitle }}</h3>
+        <p>{{ placeExtendedDescription }}</p>
+
+        <!-- Rating in More Info -->
+        <div class="rating">
+          <span v-for="star in 5" :key="star" class="star">
+            {{ star <= placeRating ? '★' : '☆' }}
+          </span>
+        </div>
+
+        <!-- Image Links Section -->
+        <div class="image-links">
+          <a v-for="(image, index) in bigPlaceImageLinks" :key="index" :href="image" target="_blank">
+            <img :src="image" :alt="'Image ' + (index + 1)" class="preview-image" />
+          </a>
+        </div>
+
+        <!-- Google Maps Embed -->
+        <div class="maps-embed">
+          <iframe
+            :src="googleMapsEmbedUrl"
+            width="100%"
+            height="300"
+            style="border: 0;"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade">
+          </iframe>
+        </div>
+
         <ul>
-          <li v-for="(detail, index) in extraDetails" :key="index">{{ detail }}</li>
+          <li v-for="(detail, index) in placeExtraDetails" :key="index">{{ detail }}</li>
         </ul>
         <button @click="toggleMoreInfo" class="close-button">Close</button>
       </div>
@@ -41,15 +70,17 @@
 import { ref } from 'vue';
 
 export default {
-  name: "PlaceCard",
+  name: "PlaceCardStandalone",
   props: {
-    title: { type: String, required: true },
-    description: { type: String, required: true },
-    rating: { type: Number, required: true, validator: value => value >= 0 && value <= 5 },
-    mapsLink: { type: String, required: true },
-    imagePath: { type: String, required: true },
-    extendedDescription: { type: String, required: true },
-    extraDetails: { type: Array, default: () => [] },
+    placeTitle: { type: String, required: true },
+    placeDescription: { type: String, default: null },
+    placeRating: { type: Number, default: null },
+    placeMapsLink: { type: String, default: null },
+    placeImagePath: { type: String, default: null },
+    placeExtendedDescription: { type: String, default: null },
+    placeExtraDetails: { type: Array, default: () => [] },
+    bigPlaceImageLinks: { type: Array, default: () => [] },
+    googleMapsEmbedUrl: { type: String, default: '' },
   },
   setup() {
     const showMoreInfo = ref(false);
@@ -67,20 +98,27 @@ export default {
 </script>
 
 <style scoped>
-/* PlaceCard Design */
+/* PlaceCard Styles */
 .place-card {
   display: flex;
-  width: 100%;
+  flex-direction: column;
   border: 1px solid #ddd;
+  padding: 16px;
   border-radius: 8px;
-  margin-top: 10px;
-  overflow: hidden;
-  background-color: rgba(255, 255, 255, 0.54);
+  margin-bottom: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: rgba(255, 255, 255, 0.574);
+  width: 100%;
+  overflow: hidden;
 }
 
 .place-info {
-  flex: 1.5;
+  display: flex;
+  align-items: center;
+}
+
+.info-left {
+  flex: 1;
   padding: 16px;
   display: flex;
   flex-direction: column;
@@ -88,16 +126,11 @@ export default {
   color: black;
 }
 
-.place-info h2 {
-  color: black;
-  font-size: 1.5em;
-  margin: 0;
-}
-
 .rating {
   display: flex;
   font-size: 1.2em;
   color: #ffd700;
+  margin: 10px 0;
 }
 
 .maps-link {
@@ -117,10 +150,11 @@ export default {
 }
 
 .place-image {
-  flex: 1.5;
+  flex: 1;
   background-size: cover;
   background-position: center;
-  border-left: 1px solid #ddd;
+  height: 200px;
+  border-radius: 8px;
 }
 
 /* Modal Styles */
@@ -130,29 +164,70 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, .8);
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 9999;
 }
 
 .modal-content {
-  background-color: rgba(221, 221, 221, 0.777);
-  padding: 20px;
-  border-radius: 8px;
+  background-color: rgba(221, 221, 221, 1);
   width: 80%;
-  max-width: 500px;
+  max-width: 700px;
+  height: 80%;
+  border-radius: 10px;
+  padding: 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
   color: black;
-  text-align: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  position: relative;
 }
 
+/* Close Button */
 .close-button {
-  margin-top: 20px;
+  position: absolute;
+  top: 15px;
+  right: 15px;
   background-color: #ff5f5f;
   color: white;
   border: none;
   padding: 8px 12px;
   cursor: pointer;
   border-radius: 5px;
+  z-index: 10000;
+}
+
+/* Image Links Section */
+.image-links {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.preview-image {
+  width: calc(100% - 5px);
+  max-width: 200px;
+  aspect-ratio: 1 / 1;
+  border-radius: 5px;
+  object-fit: cover;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Small Screen Adjustments */
+@media (max-width: 768px) {
+  .modal-content {
+    width: 90%;
+    height: 90%;
+  }
+
+  .preview-image {
+    width: calc(45% - 10px);
+  }
 }
 </style>
