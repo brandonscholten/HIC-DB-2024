@@ -31,6 +31,13 @@ function getCookie(name) {
   return matches ? decodeURIComponent(matches[1]) : undefined;
 }
 
+function deleteCookie() {
+  let allCookies = document.cookie.split(';');
+  for (let i = 0; i< allCookies.length; i++) {
+    document.cookie = allCookies[i] + "=;expires=" + new Date(0).toUTCString();
+  }
+}
+
 // construct url suffix for interests and restrictions
 function getUrlSuffix(profileData) {
   let interestString = ""; 
@@ -75,6 +82,7 @@ const createProfile = async(profileData) => {
     document.cookie = "session_id="+JSON.parse(json.session_message).session_id+";";
   } catch (error) {
     console.error(error.message);
+    deleteCookie();
   }
 
 }
@@ -99,6 +107,7 @@ const updateProfile = async (profileData) => {
     const json = await response.json();
   } catch (error) {
     console.error(error.message);
+    deleteCookie();
   }
   
 }
@@ -156,6 +165,7 @@ onMounted(async () => {
       profileData.value.allergies = restrictionString;
     } catch (error) {
       console.error(error.message);
+      deleteCookie();
     }
   }
 });
