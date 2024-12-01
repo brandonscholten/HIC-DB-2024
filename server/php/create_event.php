@@ -18,7 +18,7 @@ $database = getenv("K_GO_DATA");
 $mysqli = new mysqli($sql_host, $sql_user, $sql_pass, $database);
 
 //create the event
-$insert = $mysqli->prepare("INSERT INTO event(name, description, place, organizer) VALUES (?, ?, ?, (SELECT user_id FROM session WHERE session_id = ?))");
+$insert = $mysqli->prepare("INSERT INTO event(name, description, place_id, organizer) VALUES (?, ?, ?, (SELECT user_id FROM session WHERE session_id = ?))");
 if (!$insert) {
     echo "error: " . $mysqli->error;
 }
