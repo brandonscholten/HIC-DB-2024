@@ -67,18 +67,18 @@
         <div class="column">
           <div v-for="(event, index) in events" :key="index" class="event">
             <EventCard
-              :title="event.name"
-              :organizer="event.organizer"
-              :description="event.description"
-              :avatarUrl="event.avatarUrl"
-              :placeTitle="event.placeTitle"
+              :title="event.event_name"
+              :organizer="event.organizer_name"
+              :description="event.event_description"
+              :avatarUrl="event.organizer_photo"
+              :placeTitle="event.place_name"
               :placeDescription="event.placeDescription"
-              :placeRating="event.placeRating"
-              :placeMapsLink="event.placeMapsLink"
-              :placeImagePath="event.placeImagePath"
-              :placePreviewImagePath="event.placePreviewImagePath"
-              :placeExtendedDescription="event.placeExtendedDescription"
-              :placeExtraDetails="event.placeExtraDetails"
+              :placeRating="event.rating"
+              :placeMapsLink="event.link_to_google_maps"
+              :placeImagePath="event.primary_photo"
+              :placePreviewImagePath="event.primary_photo"
+              :placeExtendedDescription="event.place_description"
+              :placeExtraDetails="event.place_description"
             />
           </div>
         </div>
@@ -119,7 +119,9 @@ async function createEvent() {
       throw new Error(`Response status: ${response.status}`);
     }
     const json = await response.json();
-    router.push('/my-events');
+    router.push('/dummy-route').then(() => {
+      router.replace('/my-events');
+    });
   } catch (error) {
     console.error(error.message);
   }
@@ -152,6 +154,7 @@ onMounted(async () => {
       const json = await response.json();
       const res = JSON.parse(json.response);
       events.value = res;
+      console.log(events.value);
     } catch (error) {
       console.error(error.message);
     }
