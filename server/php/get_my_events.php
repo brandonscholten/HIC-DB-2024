@@ -50,7 +50,7 @@ while ($query->fetch()) {
         "rating" => $rating,
         "link_to_google_maps" => $link_to_google_maps,
         "primary_photo" => $primary_photo,
-        "photos" => $photo
+        "photos" => $photos
     );
 }   
 

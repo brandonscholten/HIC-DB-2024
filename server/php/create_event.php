@@ -28,8 +28,10 @@ $insert->execute();
 $insert->close();
 
 //add the organizer (the organizer table is unessecary)
-//$insert = $mysqli->prepare("INSERT INTO organizes(user_id, event_id) VALUES ((SELECT user_id FROM session WHERE session_id = ?),(SELECT event_id FROM event WHERE organizer = (SELECT user_id FROM user_session WHERE id = ?)))");
-//$insert->bind_param("ss", $session_id, $session_id);
+$insert = $mysqli->prepare("INSERT INTO organizes(user_id, event_id) VALUES ((SELECT user_id FROM session WHERE session_id = ?),(SELECT event_id FROM event WHERE organizer = (SELECT user_id FROM user_session WHERE id = ?)))");
+$insert->bind_param("ss", $session_id, $session_id);
+$insert->execute();
+$insert->close();
 
 //response
 $jsonAnswer = array('response' => 'event created');
