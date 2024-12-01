@@ -1,7 +1,5 @@
 <template>
   <div id="app">
-    <h1>My Events</h1>
-
     <div class="content">
       <div id="events">
         <!-- First Column with Create Event Form -->
@@ -11,33 +9,33 @@
             <form @submit.prevent="createEvent">
               <div class="form-group">
                 <label for="name">Event Name:</label>
-                <input type="text" id="name" v-model="events.name" placeholder="Enter event name" required />
+                <input type="text" id="name" v-model="createdEvent.name" placeholder="Enter event name" required />
               </div>
               
               <div class="timedate-column">
                 <!-- Date Picker Field -->
                 <div class="form-group">
                   <label for="date">Event Date:</label>
-                  <input type="date" id="date" v-model="events.date" required />
+                  <input type="date" id="date" v-model="createdEvent.date" required />
                 </div>
 
                 <!-- Time Picker Field -->
                 <div class="form-group">
                   <label for="time">Event Time:</label>
-                  <input type="time" id="time" v-model="events.time" required />
+                  <input type="time" id="time" v-model="createdEvent.time" required />
                 </div>
               </div>
 
               <div class="form-group">
                 <label for="location">Location:</label>
-                <input type="text" id="organizer" v-model="events.organizer" placeholder="Enter organizer name" required />
+                <input type="text" id="organizer" v-model="createdEvent.location" placeholder="Enter place id" required />
               </div>
 
               <div class="timedate-column">
               <!-- Event Type Dropdown and 21+ Field -->
                 <div class="form-group">
                   <label for="eventType">What type of event is this?</label>
-                  <select id="eventType" v-model="events.eventType" required>
+                  <select id="eventType" v-model="createdEvent.eventType" required>
                     <option value="" disabled selected>Select event type</option>
                     <option value="Conference">Conference</option>
                     <option value="Workshop">Workshop</option>
@@ -49,14 +47,14 @@
 
                 <div class="form-group">
                   <label for="is21Plus">Is this event 21+?</label>
-                  <input type="checkbox" id="is21Plus" v-model="events.is21Plus" />
+                  <input type="checkbox" id="is21Plus" v-model="createdEvent.is21Plus" />
                 </div>
 
             </div>
 
               <div class="form-group">
                 <label for="description">Add tags to reach users with mutual interests!</label>
-                <textarea id="description" v-model="events.description" placeholder="Enter event description" required></textarea>
+                <textarea id="description" v-model="createdEvent.description" placeholder="Enter event description" required></textarea>
               </div>
 
               <button type="submit">Post Event</button>
@@ -90,39 +88,97 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import EventCard from '@/components/EventCard.vue';
 
-const events = ref([
-  { 
-    name: 'Map Collection', 
-    organizer: 'Explorer Tim', 
-    description: 'Exploring and collecting maps from around the world', 
-    avatarUrl: 'https://cdn.pixabay.com/photo/2019/12/15/12/32/things-4697014_640.png',
-    placeTitle: 'Place one', 
-    placeDescription: null, 
-    placeRating: null, 
-    placeMapsLink: null, 
-    placeImagePath: null, 
-    placePreviewImagePath: null, 
-    placeExtendedDescription: null,  
-    placeExtraDetails: null 
-  },
-  { 
-    name: 'Mysterious Map Collection', 
-    organizer: 'Explorer Tim', 
-    description: 'Exploring and collecting mysterious maps from around the world', 
-    avatarUrl: 'https://cdn.pixabay.com/photo/2019/12/15/12/32/things-4697014_640.png',
-    placeTitle: null, 
-    placeDescription: null, 
-    placeRating: null, 
-    placeMapsLink: null, 
-    placeImagePath: null, 
-    placePreviewImagePath: null, 
-    placeExtendedDescription: null,  
-    placeExtraDetails: null 
-  },
-]);
+const createdEvent = ref({
+  name: "",
+  date: "",
+  time: "",
+  location: "",
+  eventType: "",
+  is21Plus: false,
+  description: "",
+})
+
+// const events = ref([
+//   { 
+//     name: 'Map Collection', 
+//     organizer: 'Explorer Tim', 
+//     description: 'Exploring and collecting maps from around the world', 
+//     avatarUrl: 'https://cdn.pixabay.com/photo/2019/12/15/12/32/things-4697014_640.png',
+//     placeTitle: 'Place one', 
+//     placeDescription: null, 
+//     placeRating: null, 
+//     placeMapsLink: null, 
+//     placeImagePath: null, 
+//     placePreviewImagePath: null, 
+//     placeExtendedDescription: null,  
+//     placeExtraDetails: null 
+//   },
+//   { 
+//     name: 'Mysterious Map Collection', 
+//     organizer: 'Explorer Tim', 
+//     description: 'Exploring and collecting mysterious maps from around the world', 
+//     avatarUrl: 'https://cdn.pixabay.com/photo/2019/12/15/12/32/things-4697014_640.png',
+//     placeTitle: null, 
+//     placeDescription: null, 
+//     placeRating: null, 
+//     placeMapsLink: null, 
+//     placeImagePath: null, 
+//     placePreviewImagePath: null, 
+//     placeExtendedDescription: null,  
+//     placeExtraDetails: null 
+//   },
+// ]);
+
+async function createEvent() {
+  const url = "http://localhost:5941/?session_id="+getCookie('session_id')
+              +"?event_name="+createdEvent.name+"?description="+createdEvent.description
+              +"?place="+createdEvent.location
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`Response status: ${response.status}`);
+    }
+    const json = await response.json();
+    router.push('/my-events');
+  } catch (error) {
+    console.error(error.message);
+  }
+}
+
+function getCookie(name) {
+  let matches = document.cookie.match(new RegExp(
+    "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+  ));
+  return matches ? decodeURIComponent(matches[1]) : undefined;
+}
+
+function deleteCookie() {
+  let allCookies = document.cookie.split(';');
+  for (let i = 0; i< allCookies.length; i++) {
+    document.cookie = allCookies[i] + "=;expires=" + new Date(0).toUTCString();
+  }
+}
+
+onMounted(async () => {
+  //API call to get events the user has created
+  if (getCookie('session_id')) {
+    const url = "http://localhost:9451/get_created_events/?session_id="+getCookie('session_id')
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+      const json = await response.json();
+      const res = JSON.parse(json.response);
+      events.value = res;
+    } catch (error) {
+      console.error(error.message);
+    }
+  }
+});
 
 </script>
 

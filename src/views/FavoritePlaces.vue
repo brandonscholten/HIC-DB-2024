@@ -4,12 +4,15 @@
       <div id="places">
         <div v-for="place in places" class="place">
           <PlaceCard
-            :title = place.name
-            :description = place.description
-            :rating= place.rating
-            :mapsLink= place.mapsLink
-            :imagePath="place.image"
-            :extendedDescription= place.description
+            :placeTitle="place.name"
+            :placeDescription="place.description"
+            :placeRating="place.rating"
+            :placeMapsLink="place.mapsLink"
+            :placeImagePath="place.image"
+            :placeExtendedDescription="place.description"
+            :placeExtraDetails=[]
+            :bigPlaceImageLinks=[]
+            :googleMapsEmbedUrl="place.mapsLink"
           />
         </div>
       </div>

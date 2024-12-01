@@ -36,6 +36,13 @@ const login = async () => {
   }
 } 
 
+function deleteCookie() {
+  let allCookies = document.cookie.split(';');
+  for (let i = 0; i< allCookies.length; i++) {
+    document.cookie = allCookies[i] + "=;expires=" + new Date(0).toUTCString();
+  }
+}
+
 </script>
 
 <template>
@@ -51,6 +58,7 @@ const login = async () => {
     <div class="nav-debug-middle">
         <!-- Demo Cards -->
         <router-link to="/demo-places" class="nav-button">Demo Cards</router-link> 
+        <a @click="deleteCookie">end session</a>
     </div>
 
     <div class="nav-right">

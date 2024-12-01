@@ -46,7 +46,7 @@ while ($query->fetch()) {
         'photos' => $photos,
         'description' => $description,
         'rating' => $rating,
-        'mapsLink' => $maps_link,
+        'mapsLink' => $link_to_google_maps,
         'allAges' => $suitable_for_all_ages,
         'allergensPresent' => $allergens_present,
         'category' => $category

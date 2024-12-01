@@ -187,6 +187,31 @@ def create_event():
         "response" : stdout.decode()
     })
 
+@app.route('/get_created_events/')
+def get_created_events():
+    info = request.args.to_dict(flat=False)
+
+    #check that the user has a valid session
+    if not session_utils.validate_session(info['session_id'][0]):
+        return jsonify({"error" : "failed to validate session"})
+    
+    #get events that the user has created
+    process = sp.Popen(
+        [
+            'php', 'php/get_my_events.php',
+            info['session_id'][0]
+        ],
+        stdout = sp.PIPE,
+        stderr = sp.PIPE
+    )
+    stdout, stderr = process.communicate()
+    if process.returncode != 0:
+        print(f"Error creating event: {stderr.decode()}")
+
+    return jsonify({
+        "response" : stdout.decode()
+    })
+
 @app.route('/get_places')
 def get_places():
     #get an object with all of the place information in the database

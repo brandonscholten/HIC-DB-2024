@@ -17,7 +17,9 @@
               :placeImagePath="event.primary_photo"
               :placePreviewImagePath="event.primary_photo"
               :placeExtendedDescription="event.place_description"
-              placeExtraDetails=""
+              :placeExtraDetails=[]
+              :bigPlaceImageLinks=[]
+              :googleMapsEmbedUrl="event.link_to_google_maps"
             />
           </div>
         </div>
@@ -37,7 +39,9 @@
               :placeImagePath="event.primary_photo"
               :placePreviewImagePath="event.primary_photo"
               :placeExtendedDescription="event.place_description"
-              placeExtraDetails=""
+              :placeExtraDetails=[]
+              :bigPlaceImageLinks=[]
+              :googleMapsEmbedUrl="event.link_to_google_maps"
             />
           </div>
         </div>

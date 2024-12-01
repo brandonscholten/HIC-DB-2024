@@ -71,7 +71,7 @@ import { ref } from 'vue';
 
 export default {
   name: "PlaceCardStandalone",
-  props: {
+  props: {  
     placeTitle: { type: String, required: true },
     placeDescription: { type: String, default: null },
     placeRating: { type: Number, default: null },
