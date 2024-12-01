@@ -23,7 +23,7 @@ if (!$insert) {
     echo "error: " . $mysqli->error;
 }
 
-$insert->bind_param("sssss", $event_name, $description, $place, $session_id);
+$insert->bind_param("ssss", $event_name, $description, $place, $session_id);
 $insert->execute();
 $insert->close();
 

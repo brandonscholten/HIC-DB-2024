@@ -109,41 +109,10 @@ const createdEvent = ref({
 
 const events = ref([]);
 
-// const events = ref([
-//   { 
-//     name: 'Map Collection', 
-//     organizer: 'Explorer Tim', 
-//     description: 'Exploring and collecting maps from around the world', 
-//     avatarUrl: 'https://cdn.pixabay.com/photo/2019/12/15/12/32/things-4697014_640.png',
-//     placeTitle: 'Place one', 
-//     placeDescription: null, 
-//     placeRating: null, 
-//     placeMapsLink: null, 
-//     placeImagePath: null, 
-//     placePreviewImagePath: null, 
-//     placeExtendedDescription: null,  
-//     placeExtraDetails: null 
-//   },
-//   { 
-//     name: 'Mysterious Map Collection', 
-//     organizer: 'Explorer Tim', 
-//     description: 'Exploring and collecting mysterious maps from around the world', 
-//     avatarUrl: 'https://cdn.pixabay.com/photo/2019/12/15/12/32/things-4697014_640.png',
-//     placeTitle: null, 
-//     placeDescription: null, 
-//     placeRating: null, 
-//     placeMapsLink: null, 
-//     placeImagePath: null, 
-//     placePreviewImagePath: null, 
-//     placeExtendedDescription: null,  
-//     placeExtraDetails: null 
-//   },
-// ]);
-
 async function createEvent() {
   const url = "http://localhost:5941/create_event/?session_id="+getCookie('session_id')
-              +"&event_name="+createdEvent.name+"&description="+createdEvent.description
-              +"&place="+createdEvent.location
+              +"&event_name="+createdEvent.value.name+"&description="+createdEvent.value.description
+              +"&place="+createdEvent.value.location
   try {
     const response = await fetch(url);
     if (!response.ok) {
