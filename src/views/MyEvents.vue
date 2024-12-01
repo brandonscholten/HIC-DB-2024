@@ -89,7 +89,13 @@
 
 <script setup>
 import { onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import EventCard from '@/components/EventCard.vue';
+import { inject } from 'vue';
+
+const router = useRouter();
+
+const loggedIn = inject('loggedIn');
 
 const createdEvent = ref({
   name: "",
@@ -100,6 +106,8 @@ const createdEvent = ref({
   is21Plus: false,
   description: "",
 })
+
+const events = ref([]);
 
 // const events = ref([
 //   { 
@@ -133,9 +141,9 @@ const createdEvent = ref({
 // ]);
 
 async function createEvent() {
-  const url = "http://localhost:5941/?session_id="+getCookie('session_id')
-              +"?event_name="+createdEvent.name+"?description="+createdEvent.description
-              +"?place="+createdEvent.location
+  const url = "http://localhost:5941/create_event/?session_id="+getCookie('session_id')
+              +"&event_name="+createdEvent.name+"&description="+createdEvent.description
+              +"&place="+createdEvent.location
   try {
     const response = await fetch(url);
     if (!response.ok) {
@@ -165,7 +173,8 @@ function deleteCookie() {
 onMounted(async () => {
   //API call to get events the user has created
   if (getCookie('session_id')) {
-    const url = "http://localhost:9451/get_created_events/?session_id="+getCookie('session_id')
+    loggedIn.value = true;
+    const url = "http://localhost:5941/get_created_events/?session_id="+getCookie('session_id')
     try {
       const response = await fetch(url);
       if (!response.ok) {
